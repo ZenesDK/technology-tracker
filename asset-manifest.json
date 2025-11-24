@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/technology-tracker/static/css/main.f3fed290.css",
+    "main.js": "/technology-tracker/static/js/main.376f3db4.js",
+    "static/js/453.a5f86b14.chunk.js": "/technology-tracker/static/js/453.a5f86b14.chunk.js",
+    "index.html": "/technology-tracker/index.html",
+    "main.f3fed290.css.map": "/technology-tracker/static/css/main.f3fed290.css.map",
+    "main.376f3db4.js.map": "/technology-tracker/static/js/main.376f3db4.js.map",
+    "453.a5f86b14.chunk.js.map": "/technology-tracker/static/js/453.a5f86b14.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f3fed290.css",
+    "static/js/main.376f3db4.js"
+  ]
+}
