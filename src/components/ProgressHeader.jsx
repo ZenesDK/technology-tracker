@@ -3,11 +3,11 @@ import React from 'react';
 import './ProgressHeader.css';
 
 const ProgressHeader = ({ technologies = [] }) => {
-  // Рассчитываем статистику
+  // Рассчитываем статистику на основе актуальных данных
   const totalTechnologies = technologies.length;
-  const learnedTechnologies = technologies.filter(tech => tech.status === 'изучено').length;
-  const inProgressTechnologies = technologies.filter(tech => tech.status === 'в процессе').length;
-  const notLearnedTechnologies = technologies.filter(tech => tech.status === 'не изучено').length;
+  const learnedTechnologies = technologies.filter(tech => tech.status === 'completed').length;
+  const inProgressTechnologies = technologies.filter(tech => tech.status === 'in-progress').length;
+  const notLearnedTechnologies = technologies.filter(tech => tech.status === 'not-started').length;
   
   // Рассчитываем процент выполнения
   const completionPercentage = totalTechnologies > 0 
@@ -87,26 +87,6 @@ const ProgressHeader = ({ technologies = [] }) => {
           )}
         </div>
       </div>
-
-      {/* Условное отображение для разных состояний */}
-      {totalTechnologies === 0 && (
-        <div className="empty-state">
-          <h3>📝 Дорожная карта пуста</h3>
-          <p>Добавьте технологии для отслеживания прогресса</p>
-        </div>
-      )}
-
-      {completionPercentage === 100 && (
-        <div className="completion-banner">
-          <div className="banner-content">
-            <span className="banner-icon">🎉</span>
-            <div>
-              <h3>Поздравляем!</h3>
-              <p>Вы изучили все технологии в дорожной карте!</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

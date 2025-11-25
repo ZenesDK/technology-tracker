@@ -1,34 +1,93 @@
-// TechnologyCard.jsx
+// components/TechnologyCard.jsx
 import React from 'react';
 import './TechnologyCard.css';
 
-const TechnologyCard = ({ title, description, status }) => {
+const TechnologyCard = ({ 
+  id,
+  title, 
+  description, 
+  status = 'not-started',
+  onStatusChange,
+  isHighlighted = false
+}) => {
+  // Обработчик клика для изменения статуса
+  const handleClick = () => {
+    console.log(`🖱️ Клик по карточке ${id}, текущий статус: ${status}`);
+    if (onStatusChange) {
+      onStatusChange(id, status);
+    }
+  };
+
   // Функция для определения класса статуса
   const getStatusClass = (status) => {
     switch (status) {
-      case 'изучено':
-        return 'status-learned';
-      case 'в процессе':
+      case 'completed':
+        return 'status-completed';
+      case 'in-progress':
         return 'status-in-progress';
-      case 'не изучено':
-        return 'status-not-learned';
+      case 'not-started':
+        return 'status-not-started';
       default:
         return 'status-default';
     }
   };
 
-  // Функция для получения случайного прогресса (для демонстрации)
-  const getRandomProgress = () => {
-    return Math.floor(Math.random() * 100) + 1;
+  // Функция для отображения иконки статуса
+  const renderStatusIcon = (status) => {
+    switch (status) {
+      case 'completed':
+        return '✅';
+      case 'in-progress':
+        return '🔄';
+      case 'not-started':
+        return '⏳';
+      default:
+        return '📝';
+    }
+  };
+
+  // Функция для отображения текста статуса на русском
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'completed':
+        return 'изучено';
+      case 'in-progress':
+        return 'в процессе';
+      case 'not-started':
+        return 'не изучено';
+      default:
+        return status;
+    }
+  };
+
+  // Функция для получения следующего статуса (для подсказки)
+  const getNextStatus = () => {
+    const statusOrder = ['not-started', 'in-progress', 'completed'];
+    const currentIndex = statusOrder.indexOf(status);
+    const nextIndex = (currentIndex + 1) % statusOrder.length;
+    return statusOrder[nextIndex];
+  };
+
+  // Функция для получения следующего статуса на русском
+  const getNextStatusText = () => {
+    return getStatusText(getNextStatus());
   };
 
   return (
-    <div className={`technology-card ${getStatusClass(status)}`}>
+    <div 
+      className={`technology-card ${getStatusClass(status)} interactive ${isHighlighted ? 'highlighted' : ''}`}
+      onClick={handleClick}
+      data-tech-id={id}
+      title={`Кликните чтобы изменить статус на: ${getNextStatusText()}`}
+    >
+      {isHighlighted && <div className="highlight-overlay"></div>}
+      
       <div className="technology-header">
         <h3 className="technology-title">{title}</h3>
         <span className="status-indicator">
-          <span className="status-icon"></span>
-          <span className="status-text">{status}</span>
+          {renderStatusIcon(status)}
+          <span className="status-text">{getStatusText(status)}</span>
+          <span className="click-hint">👆</span>
         </span>
       </div>
       
@@ -36,42 +95,32 @@ const TechnologyCard = ({ title, description, status }) => {
         <p>{description}</p>
       </div>
       
-      {/* Прогресс-бар для статуса "в процессе" */}
-      {status === 'в процессе' && (
-        <div className="progress-container">
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${getRandomProgress()}%` }}
-            ></div>
-          </div>
-          <div className="progress-text">
-            Прогресс изучения: {getRandomProgress()}%
-          </div>
-        </div>
-      )}
+      {/* Индикатор следующего действия */}
+      <div className="next-action-hint">
+        Кликните для перехода к: <strong>{getNextStatusText()}</strong>
+      </div>
       
       {/* Условное отображение дополнительной информации */}
-      {status === 'изучено' && (
+      {status === 'completed' && (
         <div className="completion-message">
-          <span>✅</span>
-          <span>Отлично! Эта технология полностью освоена!</span>
+          🎉 Отлично! Эта технология освоена!
         </div>
       )}
       
-      {status === 'в процессе' && (
+      {status === 'in-progress' && (
         <div className="progress-message">
-          <span>📚</span>
-          <span>Продолжайте изучение! Вы на правильном пути.</span>
+          📚 Продолжайте изучение! Вы на правильном пути.
         </div>
       )}
       
-      {status === 'не изучено' && (
+      {status === 'not-started' && (
         <div className="upcoming-message">
-          <span>🗓️</span>
-          <span>Запланировано к изучению в ближайшее время</span>
+          🗓️ Запланировано к изучению
         </div>
       )}
+
+      {/* ID карточки для отладки */}
+      <div className="card-id">ID: {id}</div>
     </div>
   );
 };
