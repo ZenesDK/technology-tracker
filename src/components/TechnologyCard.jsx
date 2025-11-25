@@ -7,9 +7,10 @@ const TechnologyCard = ({
   title, 
   description, 
   status = 'not-started',
-  onStatusChange 
+  onStatusChange,
+  isHighlighted = false
 }) => {
-  // Шаг 4: Обработчик клика для изменения статуса
+  // Обработчик клика для изменения статуса
   const handleClick = () => {
     console.log(`🖱️ Клик по карточке ${id}, текущий статус: ${status}`);
     if (onStatusChange) {
@@ -74,11 +75,13 @@ const TechnologyCard = ({
 
   return (
     <div 
-      className={`technology-card ${getStatusClass(status)} interactive`}
+      className={`technology-card ${getStatusClass(status)} interactive ${isHighlighted ? 'highlighted' : ''}`}
       onClick={handleClick}
       data-tech-id={id}
       title={`Кликните чтобы изменить статус на: ${getNextStatusText()}`}
     >
+      {isHighlighted && <div className="highlight-overlay"></div>}
+      
       <div className="technology-header">
         <h3 className="technology-title">{title}</h3>
         <span className="status-indicator">

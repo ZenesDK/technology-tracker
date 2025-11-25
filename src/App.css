@@ -277,6 +277,126 @@ body {
   font-weight: bold;
 }
 
+/* Панель фильтров */
+.filters-panel {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.filters-title {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.filter-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  color: #4a5568;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.filter-btn.active {
+  border-color: #3b82f6;
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.filter-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.filter-btn:hover .filter-icon,
+.filter-btn.active .filter-icon {
+  transform: scale(1.1);
+}
+
+.filter-text {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.filter-count {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #6b7280;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active .filter-count {
+  background: white;
+  color: #3b82f6;
+}
+
+/* Сообщение при пустом фильтре */
+.empty-filter-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #e5e7eb;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-filter-message h3 {
+  margin: 0 0 0.5rem 0;
+  color: #374151;
+}
+
+.empty-filter-message p {
+  margin: 0 0 1.5rem 0;
+  color: #6b7280;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.filtered-count {
+  color: #6b7280;
+  font-weight: normal;
+  font-size: 1rem;
+}
+
 /* ===== СООБЩЕНИЯ ===== */
 .empty-message {
   text-align: center;
@@ -393,6 +513,34 @@ body {
   
   .control-panel {
     padding: 1rem;
+  }
+}
+
+/* Адаптивность фильтров */
+@media (max-width: 768px) {
+  .filters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .filters-panel {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-btn {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+  
+  .filter-text {
+    flex: 1;
+    text-align: left;
   }
 }
 

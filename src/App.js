@@ -1,8 +1,9 @@
 // App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TechnologyCard from './components/TechnologyCard';
 import ProgressHeader from './components/ProgressHeader';
 import Statistics from './components/Statistics';
+import QuickActions from './components/QuickActions';
 import './App.css';
 
 const App = () => {
@@ -11,34 +12,43 @@ const App = () => {
     { 
       id: 1, 
       title: 'HTML & CSS', 
-      description: 'Изучение базовой разметки и стилей для создания веб-страниц. Основы семантической верстки, Flexbox, Grid и адаптивного дизайна.', 
+      description: 'Изучение базовой разметки и стилей для создания веб-страниц.', 
       status: 'not-started' 
     },
     { 
       id: 2, 
       title: 'JavaScript Basics', 
-      description: 'Освоение основ JavaScript: переменные, функции, циклы, условия. Работа с DOM, событиями и основными структурами данных.', 
+      description: 'Освоение основ JavaScript: переменные, функции, циклы, условия.', 
       status: 'not-started' 
     },
     { 
       id: 3, 
       title: 'React Components', 
-      description: 'Изучение функциональных компонентов, JSX и пропсов. Создание переиспользуемых компонентов и композиция.', 
+      description: 'Изучение функциональных компонентов, JSX и пропсов.', 
       status: 'not-started' 
     },
     { 
       id: 4, 
       title: 'State Management', 
-      description: 'Работа с состоянием компонентов через useState hook. Подъем состояния и управление данными между компонентами.', 
+      description: 'Работа с состоянием компонентов через useState hook.', 
       status: 'not-started' 
     },
     { 
       id: 5, 
       title: 'React Hooks', 
-      description: 'Изучение основных хуков: useEffect, useContext, useReducer. Создание собственных хуков для переиспользования логики.', 
+      description: 'Изучение основных хуков: useEffect, useContext, useReducer.', 
       status: 'not-started' 
     }
   ]);
+
+  // Состояние для активного фильтра
+  const [activeFilter, setActiveFilter] = useState('all');
+  
+  // Состояние для подсветки выбранной технологии
+  const [highlightedTech, setHighlightedTech] = useState(null);
+  
+  // Ref для хранения таймера подсветки
+  const highlightTimerRef = useRef(null);
 
   // Эффект для логирования изменений состояния
   useEffect(() => {
@@ -52,7 +62,7 @@ const App = () => {
     console.log('📊 Обновленная статистика:', stats);
   }, [technologies]);
 
-  // Шаг 3: Функция для обновления статуса конкретной технологии по id
+  // Функция для обновления статуса конкретной технологии по id
   const updateTechnologyStatus = (technologyId, newStatus) => {
     console.log(`🔄 Обновление технологии ${technologyId} на статус: ${newStatus}`);
     
@@ -62,7 +72,7 @@ const App = () => {
           ? { 
               ...technology, 
               status: newStatus,
-              lastUpdated: new Date().toISOString() // Добавляем время обновления
+              lastUpdated: new Date().toISOString()
             }
           : technology
       )
@@ -83,18 +93,8 @@ const App = () => {
     updateTechnologyStatus(technologyId, nextStatus);
   };
 
-  // Функция для сброса всех статусов
-  const resetAllStatuses = () => {
-    setTechnologies(prevTechnologies => 
-      prevTechnologies.map(technology => ({
-        ...technology,
-        status: 'not-started'
-      }))
-    );
-  };
-
-  // Функция для отметки всех как изученных
-  const markAllAsCompleted = () => {
+  // Функции для быстрых действий
+  const handleMarkAllCompleted = () => {
     setTechnologies(prevTechnologies => 
       prevTechnologies.map(technology => ({
         ...technology,
@@ -103,16 +103,84 @@ const App = () => {
     );
   };
 
-  // Функция для добавления демо-прогресса
-  const addDemoProgress = () => {
+  const handleResetAllStatuses = () => {
     setTechnologies(prevTechnologies => 
-      prevTechnologies.map((technology, index) => {
-        if (index === 0) return { ...technology, status: 'completed' };
-        if (index === 1) return { ...technology, status: 'completed' };
-        if (index === 2) return { ...technology, status: 'in-progress' };
-        return technology;
-      })
+      prevTechnologies.map(technology => ({
+        ...technology,
+        status: 'not-started'
+      }))
     );
+  };
+
+  // Функция для случайного выбора технологии
+  const handleRandomSelect = (technologyId) => {
+    console.log(`🎲 Обработка случайного выбора: ${technologyId}`);
+    
+    // Сбрасываем предыдущую подсветку
+    setHighlightedTech(null);
+    
+    // Очищаем предыдущий таймер
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+    }
+    
+    // Устанавливаем новую подсветку
+    setHighlightedTech(technologyId);
+    
+    // Прокручиваем к выбранной технологии
+    const element = document.querySelector(`[data-tech-id="${technologyId}"]`);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+      
+      // Добавляем класс анимации
+      element.classList.add('highlight-pulse');
+      
+      // Убираем класс анимации через 2 секунды
+      setTimeout(() => {
+        element.classList.remove('highlight-pulse');
+      }, 2000);
+    }
+    
+    // Автоматически меняем статус на "в процессе", если он "не начат"
+    const tech = technologies.find(t => t.id === technologyId);
+    if (tech && tech.status === 'not-started') {
+      setTimeout(() => {
+        updateTechnologyStatus(technologyId, 'in-progress');
+      }, 1000);
+    }
+    
+    // Сбрасываем подсветку через 3 секунды
+    highlightTimerRef.current = setTimeout(() => {
+      setHighlightedTech(null);
+    }, 3000);
+  };
+
+  // Функция для фильтрации технологий
+  const getFilteredTechnologies = () => {
+    switch (activeFilter) {
+      case 'not-started':
+        return technologies.filter(tech => tech.status === 'not-started');
+      case 'in-progress':
+        return technologies.filter(tech => tech.status === 'in-progress');
+      case 'completed':
+        return technologies.filter(tech => tech.status === 'completed');
+      default:
+        return technologies;
+    }
+  };
+
+  // Получаем отфильтрованные технологии
+  const filteredTechnologies = getFilteredTechnologies();
+
+  // Статистика для фильтров
+  const filterStats = {
+    all: technologies.length,
+    'not-started': technologies.filter(t => t.status === 'not-started').length,
+    'in-progress': technologies.filter(t => t.status === 'in-progress').length,
+    'completed': technologies.filter(t => t.status === 'completed').length
   };
 
   return (
@@ -120,154 +188,118 @@ const App = () => {
       <header className="app-header">
         <div className="header-content">
           <h1>🚀 Интерактивная дорожная карта разработчика</h1>
-          <p>Кликайте на карточки для изменения статуса изучения технологий</p>
+          <p>Управляйте прогрессом изучения технологий с помощью фильтров и быстрых действий</p>
         </div>
       </header>
 
       <main className="app-main">
         {/* ProgressHeader с актуальными данными */}
         <ProgressHeader technologies={technologies} />
+
+        {/* Статистика */}
         <Statistics technologies={technologies} />
 
-        {/* Панель управления */}
-        <div className="control-panel">
-          <h3>⚙️ Управление статусами</h3>
-          <div className="control-buttons">
+        {/* Быстрые действия */}
+        <QuickActions 
+          technologies={technologies}
+          onMarkAllCompleted={handleMarkAllCompleted}
+          onResetAllStatuses={handleResetAllStatuses}
+          onRandomSelect={handleRandomSelect}
+        />
+
+        {/* Фильтры */}
+        <div className="filters-panel">
+          <h3 className="filters-title">🔍 Фильтры технологий</h3>
+          <div className="filters-grid">
             <button 
-              className="btn btn-demo"
-              onClick={addDemoProgress}
+              className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('all')}
             >
-              🎯 Добавить демо-прогресс
+              <span className="filter-icon">📋</span>
+              <span className="filter-text">Все технологии</span>
+              <span className="filter-count">{filterStats.all}</span>
             </button>
+
             <button 
-              className="btn btn-success"
-              onClick={markAllAsCompleted}
+              className={`filter-btn ${activeFilter === 'not-started' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('not-started')}
             >
-              ✅ Отметить все как изучено
+              <span className="filter-icon">⏳</span>
+              <span className="filter-text">Не начатые</span>
+              <span className="filter-count">{filterStats['not-started']}</span>
             </button>
+
             <button 
-              className="btn btn-secondary"
-              onClick={resetAllStatuses}
+              className={`filter-btn ${activeFilter === 'in-progress' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('in-progress')}
             >
-              🔄 Сбросить все статусы
+              <span className="filter-icon">🔄</span>
+              <span className="filter-text">В процессе</span>
+              <span className="filter-count">{filterStats['in-progress']}</span>
             </button>
-          </div>
-          <div className="instruction">
-            <p>💡 <strong>Как использовать:</strong> Кликайте на любую карточку технологии для циклического переключения статусов</p>
-            <div className="status-cycle-demo">
-              <span className="status-badge not-started">не изучено</span>
-              <span className="arrow">→</span>
-              <span className="status-badge in-progress">в процессе</span>
-              <span className="arrow">→</span>
-              <span className="status-badge completed">изучено</span>
-              <span className="arrow">→</span>
-              <span className="status-badge not-started">не изучено</span>
-            </div>
+
+            <button 
+              className={`filter-btn ${activeFilter === 'completed' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('completed')}
+            >
+              <span className="filter-icon">✅</span>
+              <span className="filter-text">Выполненные</span>
+              <span className="filter-count">{filterStats.completed}</span>
+            </button>
           </div>
         </div>
 
-        {/* Все технологии в одном списке с возможностью изменения статуса */}
+        {/* Отфильтрованные технологии */}
         <div className="technologies-section">
           <h2 className="main-section-title">
-            📋 Все технологии ({technologies.length})
+            {activeFilter === 'all' && '📋 Все технологии'}
+            {activeFilter === 'not-started' && '⏳ Технологии к изучению'}
+            {activeFilter === 'in-progress' && '🔄 Технологии в процессе'}
+            {activeFilter === 'completed' && '✅ Изученные технологии'}
+            <span className="filtered-count"> ({filteredTechnologies.length})</span>
           </h2>
-          <div className="technologies-grid">
-            {technologies.map(tech => (
-              <TechnologyCard
-                key={tech.id}
-                id={tech.id}
-                title={tech.title}
-                description={tech.description}
-                status={tech.status}
-                onStatusChange={handleCardClick}
-              />
-            ))}
-          </div>
-        </div>
 
-        {/* Группировка по статусам для наглядности */}
-        <div className="status-sections">
-          {/* В процессе изучения */}
-          <div className="technology-section">
-            <h2 className="section-title in-progress">
-              📚 В процессе изучения ({technologies.filter(t => t.status === 'in-progress').length})
-            </h2>
-            {technologies.filter(t => t.status === 'in-progress').length > 0 ? (
-              <div className="technologies-grid">
-                {technologies
-                  .filter(tech => tech.status === 'in-progress')
-                  .map(tech => (
-                    <TechnologyCard
-                      key={tech.id}
-                      id={tech.id}
-                      title={tech.title}
-                      description={tech.description}
-                      status={tech.status}
-                      onStatusChange={handleCardClick}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <p className="empty-message">Нет технологий в процессе изучения</p>
-            )}
-          </div>
-
-          {/* Изученные технологии */}
-          <div className="technology-section">
-            <h2 className="section-title completed">
-              ✅ Изученные технологии ({technologies.filter(t => t.status === 'completed').length})
-            </h2>
-            {technologies.filter(t => t.status === 'completed').length > 0 ? (
-              <div className="technologies-grid">
-                {technologies
-                  .filter(tech => tech.status === 'completed')
-                  .map(tech => (
-                    <TechnologyCard
-                      key={tech.id}
-                      id={tech.id}
-                      title={tech.title}
-                      description={tech.description}
-                      status={tech.status}
-                      onStatusChange={handleCardClick}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <p className="empty-message">Пока нет изученных технологий</p>
-            )}
-          </div>
-
-          {/* Технологии к изучению */}
-          <div className="technology-section">
-            <h2 className="section-title not-started">
-              🗓️ Технологии к изучению ({technologies.filter(t => t.status === 'not-started').length})
-            </h2>
-            {technologies.filter(t => t.status === 'not-started').length > 0 ? (
-              <div className="technologies-grid">
-                {technologies
-                  .filter(tech => tech.status === 'not-started')
-                  .map(tech => (
-                    <TechnologyCard
-                      key={tech.id}
-                      id={tech.id}
-                      title={tech.title}
-                      description={tech.description}
-                      status={tech.status}
-                      onStatusChange={handleCardClick}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <p className="empty-message">Все технологии изучены! 🎉</p>
-            )}
-          </div>
+          {filteredTechnologies.length > 0 ? (
+            <div className="technologies-grid">
+              {filteredTechnologies.map(tech => (
+                <TechnologyCard
+                  key={tech.id}
+                  id={tech.id}
+                  title={tech.title}
+                  description={tech.description}
+                  status={tech.status}
+                  onStatusChange={handleCardClick}
+                  isHighlighted={highlightedTech === tech.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-filter-message">
+              <div className="empty-icon">🔍</div>
+              <h3>Технологии не найдены</h3>
+              <p>
+                {activeFilter === 'not-started' && 'Все технологии начаты или уже изучены!'}
+                {activeFilter === 'in-progress' && 'Нет технологий в процессе изучения.'}
+                {activeFilter === 'completed' && 'Пока нет изученных технологий.'}
+                {activeFilter === 'all' && 'Дорожная карта пуста. Добавьте технологии!'}
+              </p>
+              <button 
+                className="btn btn-primary"
+                onClick={() => setActiveFilter('all')}
+              >
+                Показать все технологии
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Отладочная информация */}
         <details className="debug-info">
-          <summary>🔍 Отладочная информация (для разработки)</summary>
+          <summary>🔍 Отладочная информация</summary>
           <div>
-            <h4>Текущее состояние технологий:</h4>
+            <h4>Активный фильтр: {activeFilter}</h4>
+            <h4>Отфильтровано: {filteredTechnologies.length} из {technologies.length}</h4>
+            <h4>Подсвеченная технология: {highlightedTech || 'нет'}</h4>
             <pre>{JSON.stringify(technologies, null, 2)}</pre>
           </div>
         </details>
@@ -278,6 +310,7 @@ const App = () => {
           <p>
             Интерактивная дорожная карта • 
             Технологий: {technologies.length} • 
+            Фильтр: {activeFilter} •
             Обновлено: {new Date().toLocaleDateString('ru-RU')}
           </p>
         </div>

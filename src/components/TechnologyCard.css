@@ -244,6 +244,30 @@
   color: #374151;
 }
 
+.technology-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+}
+
+.technology-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Новые цвета для статусов */
+.status-not-started { 
+  border-left-color: #ff6b6b; 
+}
+
+.status-in-progress { 
+  border-left-color: #4ecdc4; 
+}
+
+.status-completed { 
+  border-left-color: #45b7d1; 
+}
+
 /* Описание технологии */
 .technology-description {
   color: #4b5563;
@@ -301,6 +325,55 @@
   background-color: #f3f4f6;
   color: #374151;
   border-left-color: #6b7280;
+}
+
+/* Подсветка для случайного выбора */
+.technology-card.highlighted {
+  animation: highlightGlow 2s ease-in-out;
+  position: relative;
+  z-index: 10;
+}
+
+@keyframes highlightGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(59, 130, 246, 0.3);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    transform: scale(1);
+  }
+}
+
+.highlight-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+  border-radius: 12px;
+  animation: overlayPulse 2s ease-in-out;
+}
+
+@keyframes overlayPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* Анимация пульсации при клике на случайный выбор */
+.highlight-pulse {
+  animation: quickPulse 0.5s ease-in-out;
+}
+
+@keyframes quickPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 /* ID карточки */
