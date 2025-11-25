@@ -105,11 +105,11 @@
 
 .progress-text {
   font-size: 0.9rem;
+  opacity: 0.9;
   text-align: right;
   max-width: 200px;
-  color: #ffffff; /* Чистый белый без прозрачности */
+  color: white;
   font-weight: 500;
-  opacity: 1; /* Убираем прозрачность */
 }
 
 /* Прогресс-бар */
@@ -286,5 +286,13 @@
   
   .progress-bar-section {
     padding: 1rem;
+  }
+  
+  .stat-item {
+    padding: 0.75rem;
+  }
+  
+  .progress-percentage {
+    font-size: 1.5rem;
   }
 }

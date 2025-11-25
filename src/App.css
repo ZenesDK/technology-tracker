@@ -1,5 +1,4 @@
 /* App.css */
-/* ===== БАЗОВЫЕ СТИЛИ И СБРОС ===== */
 * {
   margin: 0;
   padding: 0;
@@ -131,13 +130,27 @@ body {
   margin-bottom: var(--space-2xl);
 }
 
-/* ===== СЕКЦИИ ГРУППИРОВКИ ===== */
+/* ===== СЕКЦИИ ===== */
+.technologies-section,
+.status-sections {
+  margin-bottom: var(--space-2xl);
+}
+
 .technology-section {
   margin-bottom: var(--space-2xl);
 }
 
 .technology-section:last-child {
   margin-bottom: 0;
+}
+
+.main-section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--border-color);
 }
 
 .section-title {
@@ -153,95 +166,153 @@ body {
 }
 
 /* Стили для разных типов секций */
-.section-learned .section-title {
+.section-title.completed {
   color: var(--success-color);
   border-bottom-color: var(--success-color);
 }
 
-.section-in-progress .section-title {
+.section-title.in-progress {
   color: var(--warning-color);
   border-bottom-color: var(--warning-color);
 }
 
-.section-upcoming .section-title {
+.section-title.not-started {
   color: var(--text-secondary);
   border-bottom-color: var(--text-light);
 }
 
-/* ===== СТАТИСТИКА ПРОГРЕССА ===== */
-.progress-stats {
-  background: var(--bg-primary);
-  border-radius: var(--radius-xl);
-  padding: var(--space-2xl);
-  margin-top: var(--space-2xl);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
+/* ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== */
+.control-panel {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.stats-header {
+.control-panel h3 {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
   text-align: center;
-  margin-bottom: var(--space-xl);
 }
 
-.stats-header h2 {
-  font-size: var(--font-size-2xl);
+.control-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
-}
-
-.stats-header p {
-  color: var(--text-secondary);
-  font-size: var(--font-size-lg);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-lg);
-}
-
-.stat-card {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  text-align: center;
-  border: 1px solid var(--border-color);
+  cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.875rem;
 }
 
-.stat-card:hover {
+.btn:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.stat-number {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  margin-bottom: var(--space-sm);
-  line-height: 1;
+.btn-demo {
+  background: #8b5cf6;
+  color: white;
 }
 
-.stat-label {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
-  font-weight: 500;
+.btn-success {
+  background: #10b981;
+  color: white;
 }
 
-/* Цвета для разных типов статистики */
-.stat-card.learned .stat-number {
-  color: var(--success-color);
+.btn-secondary {
+  background: #6b7280;
+  color: white;
 }
 
-.stat-card.in-progress .stat-number {
-  color: var(--warning-color);
+.instruction {
+  text-align: center;
+  margin-top: 1rem;
 }
 
-.stat-card.upcoming .stat-number {
-  color: var(--text-secondary);
+.instruction p {
+  margin: 0 0 1rem 0;
+  color: #4a5568;
+}
+
+.status-cycle-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+}
+
+.status-badge.not-started {
+  background: #6b7280;
+}
+
+.status-badge.in-progress {
+  background: #f59e0b;
+}
+
+.status-badge.completed {
+  background: #10b981;
+}
+
+.arrow {
+  color: #9ca3af;
+  font-weight: bold;
+}
+
+/* ===== СООБЩЕНИЯ ===== */
+.empty-message {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #e5e7eb;
+}
+
+/* ===== ОТЛАДОЧНАЯ ИНФОРМАЦИЯ ===== */
+.debug-info {
+  background: #1f2937;
+  color: #f3f4f6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 0.75rem;
+}
+
+.debug-info summary {
+  cursor: pointer;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.debug-info pre {
+  margin: 1rem 0 0 0;
+  white-space: pre-wrap;
+  background: #111827;
+  padding: 1rem;
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 /* ===== ПОДВАЛ ПРИЛОЖЕНИЯ ===== */
@@ -258,54 +329,6 @@ body {
   text-align: center;
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
-}
-
-/* ===== УТИЛИТЫ И ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ===== */
-.loading-state {
-  text-align: center;
-  padding: var(--space-2xl);
-  color: var(--text-secondary);
-}
-
-.empty-state {
-  text-align: center;
-  padding: var(--space-2xl);
-  background: var(--bg-primary);
-  border-radius: var(--radius-lg);
-  border: 2px dashed var(--border-color);
-}
-
-.empty-state h3 {
-  color: var(--text-secondary);
-  margin-bottom: var(--space-sm);
-}
-
-/* Стили для состояний карточек */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-badge.learned {
-  background: var(--success-color);
-  color: white;
-}
-
-.status-badge.in-progress {
-  background: var(--warning-color);
-  color: white;
-}
-
-.status-badge.not-started {
-  background: var(--text-light);
-  color: white;
 }
 
 /* ===== АДАПТИВНОСТЬ ===== */
@@ -331,22 +354,19 @@ body {
     gap: var(--space-md);
   }
   
-  .progress-stats {
-    padding: var(--space-lg);
-    margin-top: var(--space-xl);
+  .control-buttons {
+    flex-direction: column;
+    align-items: center;
   }
   
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
+  .btn {
+    width: 100%;
+    max-width: 300px;
   }
   
-  .stat-card {
-    padding: var(--space-md);
-  }
-  
-  .stat-number {
-    font-size: 2rem;
+  .status-cycle-demo {
+    flex-direction: column;
+    gap: 0.25rem;
   }
   
   .section-title {
@@ -371,36 +391,10 @@ body {
     padding: var(--space-md);
   }
   
-  .progress-stats {
-    padding: var(--space-md);
-    border-radius: var(--radius-lg);
+  .control-panel {
+    padding: 1rem;
   }
 }
-
-/* ===== АНИМАЦИИ ===== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.technology-section {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.stat-card {
-  animation: fadeIn 0.6s ease-out;
-}
-
-/* Задержки для анимаций последовательного появления */
-.technology-section:nth-child(1) { animation-delay: 0.1s; }
-.technology-section:nth-child(2) { animation-delay: 0.2s; }
-.technology-section:nth-child(3) { animation-delay: 0.3s; }
 
 /* ===== КАСТОМНЫЕ ПОЛОСЫ ПРОКРУТКИ ===== */
 ::-webkit-scrollbar {
@@ -418,73 +412,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-light);
-}
-
-/* App.css - дополнительные стили */
-.instruction-panel {
-  background: #f8fafc;
-  border: 2px dashed #e2e8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.instruction-panel h3 {
-  margin: 0 0 1rem 0;
-  color: #2d3748;
-}
-
-.instruction-panel p {
-  margin: 0 0 1rem 0;
-  color: #4a5568;
-}
-
-.status-cycle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.status-demo {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: white;
-}
-
-.status-demo.not-started {
-  background: #6b7280;
-}
-
-.status-demo.in-progress {
-  background: #f59e0b;
-}
-
-.status-demo.completed {
-  background: #10b981;
-}
-
-.arrow {
-  color: #9ca3af;
-  font-weight: bold;
-}
-
-/* Добавить в App.css */
-.debug-info {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem 0;
-  font-family: monospace;
-  font-size: 0.875rem;
-}
-
-.debug-info h4 {
-  margin: 0 0 0.5rem 0;
-  color: #374151;
 }

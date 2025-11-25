@@ -1,30 +1,19 @@
 // components/TechnologyCard.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import './TechnologyCard.css';
 
 const TechnologyCard = ({ 
+  id,
   title, 
   description, 
-  initialStatus = 'not-started',
+  status = 'not-started',
   onStatusChange 
 }) => {
-  // Состояние для хранения текущего статуса
-  const [status, setStatus] = useState(initialStatus);
-
-  // Функция для переключения статусов по циклу
-  const handleStatusClick = () => {
-    const statusOrder = ['not-started', 'in-progress', 'completed'];
-    const currentIndex = statusOrder.indexOf(status);
-    const nextIndex = (currentIndex + 1) % statusOrder.length;
-    const newStatus = statusOrder[nextIndex];
-    
-    console.log(`Changing status from ${status} to ${newStatus}`);
-    
-    setStatus(newStatus);
-    
-    // Вызываем колбэк, если он передан
+  // Шаг 4: Обработчик клика для изменения статуса
+  const handleClick = () => {
+    console.log(`🖱️ Клик по карточке ${id}, текущий статус: ${status}`);
     if (onStatusChange) {
-      onStatusChange(newStatus);
+      onStatusChange(id, status);
     }
   };
 
@@ -78,11 +67,17 @@ const TechnologyCard = ({
     return statusOrder[nextIndex];
   };
 
+  // Функция для получения следующего статуса на русском
+  const getNextStatusText = () => {
+    return getStatusText(getNextStatus());
+  };
+
   return (
     <div 
-      className={`technology-card ${getStatusClass(status)} clickable`}
-      onClick={handleStatusClick}
-      title={`Кликните для изменения статуса. Следующий статус: ${getStatusText(getNextStatus())}`}
+      className={`technology-card ${getStatusClass(status)} interactive`}
+      onClick={handleClick}
+      data-tech-id={id}
+      title={`Кликните чтобы изменить статус на: ${getNextStatusText()}`}
     >
       <div className="technology-header">
         <h3 className="technology-title">{title}</h3>
@@ -99,7 +94,7 @@ const TechnologyCard = ({
       
       {/* Индикатор следующего действия */}
       <div className="next-action-hint">
-        Кликните для перехода к статусу: <strong>{getStatusText(getNextStatus())}</strong>
+        Кликните для перехода к: <strong>{getNextStatusText()}</strong>
       </div>
       
       {/* Условное отображение дополнительной информации */}
@@ -120,6 +115,9 @@ const TechnologyCard = ({
           🗓️ Запланировано к изучению
         </div>
       )}
+
+      {/* ID карточки для отладки */}
+      <div className="card-id">ID: {id}</div>
     </div>
   );
 };

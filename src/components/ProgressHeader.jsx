@@ -35,15 +35,6 @@ const ProgressHeader = ({ technologies = [] }) => {
   const progressColor = getProgressBarColor(completionPercentage);
   const progressText = getProgressText(completionPercentage);
 
-  // Отладочный вывод
-  console.log('ProgressHeader stats:', {
-    total: totalTechnologies,
-    learned: learnedTechnologies,
-    inProgress: inProgressTechnologies,
-    notLearned: notLearnedTechnologies,
-    percentage: completionPercentage
-  });
-
   return (
     <div className="progress-header">
       {/* Основная статистика */}
@@ -96,26 +87,6 @@ const ProgressHeader = ({ technologies = [] }) => {
           )}
         </div>
       </div>
-
-      {/* Условное отображение для разных состояний */}
-      {totalTechnologies === 0 && (
-        <div className="empty-state">
-          <h3>📝 Дорожная карта пуста</h3>
-          <p>Добавьте технологии для отслеживания прогресса</p>
-        </div>
-      )}
-
-      {completionPercentage === 100 && (
-        <div className="completion-banner">
-          <div className="banner-content">
-            <span className="banner-icon">🎉</span>
-            <div>
-              <h3>Поздравляем!</h3>
-              <p>Вы изучили все технологии в дорожной карте!</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
