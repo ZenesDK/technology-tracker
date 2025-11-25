@@ -3,11 +3,11 @@ import React from 'react';
 import './ProgressHeader.css';
 
 const ProgressHeader = ({ technologies = [] }) => {
-  // Рассчитываем статистику
+  // Рассчитываем статистику на основе актуальных данных
   const totalTechnologies = technologies.length;
-  const learnedTechnologies = technologies.filter(tech => tech.status === 'изучено').length;
-  const inProgressTechnologies = technologies.filter(tech => tech.status === 'в процессе').length;
-  const notLearnedTechnologies = technologies.filter(tech => tech.status === 'не изучено').length;
+  const learnedTechnologies = technologies.filter(tech => tech.status === 'completed').length;
+  const inProgressTechnologies = technologies.filter(tech => tech.status === 'in-progress').length;
+  const notLearnedTechnologies = technologies.filter(tech => tech.status === 'not-started').length;
   
   // Рассчитываем процент выполнения
   const completionPercentage = totalTechnologies > 0 
@@ -34,6 +34,15 @@ const ProgressHeader = ({ technologies = [] }) => {
 
   const progressColor = getProgressBarColor(completionPercentage);
   const progressText = getProgressText(completionPercentage);
+
+  // Отладочный вывод
+  console.log('ProgressHeader stats:', {
+    total: totalTechnologies,
+    learned: learnedTechnologies,
+    inProgress: inProgressTechnologies,
+    notLearned: notLearnedTechnologies,
+    percentage: completionPercentage
+  });
 
   return (
     <div className="progress-header">
