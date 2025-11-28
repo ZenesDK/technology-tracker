@@ -1,0 +1,164 @@
+/* components/TechnologyNotes.css */
+.notes-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.notes-section:hover {
+  border-color: #cbd5e0;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #f1f5f9;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notes-header:hover {
+  background: #e2e8f0;
+}
+
+.notes-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notes-icon {
+  font-size: 1rem;
+}
+
+.notes-badge {
+  background: #3b82f6;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.expand-icon {
+  color: #6b7280;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.notes-header:hover .expand-icon {
+  color: #374151;
+}
+
+.notes-content {
+  padding: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.notes-textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.notes-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.notes-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.notes-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.notes-status {
+  transition: color 0.3s ease;
+}
+
+.notes-status.saved {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.notes-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.notes-clear-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notes-clear-btn:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.notes-clear-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Анимация появления */
+.notes-content {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .notes-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .notes-actions {
+    align-self: flex-end;
+  }
+}
