@@ -97,7 +97,7 @@
 .progress-percentage {
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #fff, #e2e8f0);
+  background: linear-gradient(135deg, #cacaca, #cacaca);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
