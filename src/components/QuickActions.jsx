@@ -1,103 +1,161 @@
 // components/QuickActions.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from './Modal';
 import './QuickActions.css';
 
 const QuickActions = ({ 
-  technologies = [], 
   onMarkAllCompleted, 
-  onResetAllStatuses, 
-  onRandomSelect 
+  onResetAll, 
+  technologies,
+  onExportData 
 }) => {
-  // Проверяем, доступны ли действия
-  const hasTechnologies = technologies.length > 0;
-  const hasNotStarted = technologies.some(tech => tech.status === 'not-started');
-  const hasInProgress = technologies.some(tech => tech.status === 'in-progress');
-  const allCompleted = technologies.every(tech => tech.status === 'completed');
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
 
-  // Получаем случайную невыполненную технологию
-  const getRandomNotCompletedTech = () => {
-    const notCompleted = technologies.filter(tech => 
-      tech.status === 'not-started' || tech.status === 'in-progress'
-    );
-    if (notCompleted.length === 0) return null;
-    const randomTech = notCompleted[Math.floor(Math.random() * notCompleted.length)];
-    console.log('🎲 Случайно выбрана технология:', randomTech);
-    return randomTech;
+  const handleExport = () => {
+    const data = {
+      exportedAt: new Date().toISOString(),
+      version: '1.0',
+      technologies: technologies,
+      statistics: {
+        total: technologies.length,
+        completed: technologies.filter(t => t.status === 'completed').length,
+        inProgress: technologies.filter(t => t.status === 'in-progress').length,
+        notStarted: technologies.filter(t => t.status === 'not-started').length
+      }
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tech-tracker-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    setShowExportModal(true);
   };
 
-  const handleRandomSelect = () => {
-    const randomTech = getRandomNotCompletedTech();
-    if (randomTech && onRandomSelect) {
-      onRandomSelect(randomTech.id);
-    } else {
-      console.log('❌ Нет доступных технологий для случайного выбора');
+  const handleConfirmAction = (action) => {
+    setConfirmAction(action);
+    setShowConfirmModal(true);
+  };
+
+  const executeAction = () => {
+    if (confirmAction === 'markAllCompleted') {
+      onMarkAllCompleted();
+    } else if (confirmAction === 'resetAll') {
+      onResetAll();
     }
+    setShowConfirmModal(false);
+    setConfirmAction(null);
   };
 
-  const randomTech = getRandomNotCompletedTech();
+  const getCompletedCount = () => technologies.filter(t => t.status === 'completed').length;
+  const allCompleted = getCompletedCount() === technologies.length;
 
   return (
     <div className="quick-actions">
-      <h3 className="actions-title">⚡ Быстрые действия</h3>
+      <h3 className="quick-actions-title">⚡ Быстрые действия</h3>
       
-      <div className="actions-grid">
+      <div className="action-buttons">
         <button 
-          className={`action-btn mark-all-btn ${!hasTechnologies || allCompleted ? 'disabled' : ''}`}
-          onClick={onMarkAllCompleted}
-          disabled={!hasTechnologies || allCompleted}
+          onClick={() => handleConfirmAction('markAllCompleted')} 
+          className="btn btn-success"
+          disabled={allCompleted}
           title={allCompleted ? 'Все технологии уже изучены' : 'Отметить все технологии как изученные'}
         >
-          <span className="action-icon">✅</span>
-          <span className="action-text">Отметить все как выполненные</span>
+          <span className="btn-icon">✅</span>
+          Отметить все как выполненные
           {allCompleted && <span className="action-badge">Готово</span>}
         </button>
-
+        
         <button 
-          className={`action-btn reset-all-btn ${!hasTechnologies ? 'disabled' : ''}`}
-          onClick={onResetAllStatuses}
-          disabled={!hasTechnologies}
+          onClick={() => handleConfirmAction('resetAll')} 
+          className="btn btn-warning"
           title="Сбросить статусы всех технологий"
         >
-          <span className="action-icon">🔄</span>
-          <span className="action-text">Сбросить все статусы</span>
+          <span className="btn-icon">🔄</span>
+          Сбросить все статусы
         </button>
-
+        
         <button 
-          className={`action-btn random-btn ${!hasNotStarted && !hasInProgress ? 'disabled' : ''}`}
-          onClick={handleRandomSelect}
-          disabled={!hasNotStarted && !hasInProgress}
-          title={!hasNotStarted && !hasInProgress ? 'Все технологии изучены' : 'Выбрать случайную технологию для изучения'}
+          onClick={handleExport} 
+          className="btn btn-info"
+          title="Экспортировать данные в JSON файл"
         >
-          <span className="action-icon">🎲</span>
-          <span className="action-text">Случайный выбор</span>
-          {randomTech && (
-            <span className="action-hint">Следующая: {randomTech.title}</span>
-          )}
+          <span className="btn-icon">📤</span>
+          Экспорт данных
         </button>
       </div>
 
-      {/* Статус действий */}
-      <div className="actions-status">
-        <div className="status-item">
-          <span className="status-dot not-started"></span>
-          <span>Не начато: {technologies.filter(t => t.status === 'not-started').length}</span>
+      {/* Модальное окно подтверждения */}
+      <Modal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        title="Подтверждение действия"
+        size="sm"
+      >
+        <div className="confirm-modal-content">
+          <p>
+            {confirmAction === 'markAllCompleted' 
+              ? 'Вы уверены, что хотите отметить все технологии как выполненные?'
+              : 'Вы уверены, что хотите сбросить статусы всех технологий?'
+            }
+          </p>
+          <div className="confirm-actions">
+            <button 
+              onClick={() => setShowConfirmModal(false)}
+              className="btn btn-secondary"
+            >
+              Отмена
+            </button>
+            <button 
+              onClick={executeAction}
+              className={confirmAction === 'markAllCompleted' ? 'btn btn-success' : 'btn btn-warning'}
+            >
+              {confirmAction === 'markAllCompleted' ? 'Да, отметить все' : 'Да, сбросить'}
+            </button>
+          </div>
         </div>
-        <div className="status-item">
-          <span className="status-dot in-progress"></span>
-          <span>В процессе: {technologies.filter(t => t.status === 'in-progress').length}</span>
-        </div>
-        <div className="status-item">
-          <span className="status-dot completed"></span>
-          <span>Выполнено: {technologies.filter(t => t.status === 'completed').length}</span>
-        </div>
-      </div>
+      </Modal>
 
-      {/* Отладочная информация */}
-      {randomTech && (
-        <div className="random-tech-info">
-          <small>Случайный выбор: "{randomTech.title}" (ID: {randomTech.id})</small>
+      {/* Модальное окно экспорта */}
+      <Modal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        title="Экспорт данных"
+        size="md"
+      >
+        <div className="export-modal-content">
+          <div className="export-success">
+            <span className="export-icon">✅</span>
+            <h4>Данные успешно экспортированы!</h4>
+          </div>
+          <p>Файл с вашими данными был скачан автоматически.</p>
+          <div className="export-details">
+            <div className="export-detail">
+              <strong>Технологий:</strong> {technologies.length}
+            </div>
+            <div className="export-detail">
+              <strong>Изучено:</strong> {getCompletedCount()}
+            </div>
+            <div className="export-detail">
+              <strong>Формат:</strong> JSON
+            </div>
+          </div>
+          <button 
+            onClick={() => setShowExportModal(false)}
+            className="btn btn-primary"
+          >
+            Закрыть
+          </button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };
