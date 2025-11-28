@@ -8,7 +8,9 @@ const TechnologyCard = ({
   description, 
   status = 'not-started',
   onStatusChange,
-  isHighlighted = false
+  isHighlighted = false,
+  hasNotes = false,
+  searchQuery = ''
 }) => {
   // Обработчик клика для изменения статуса
   const handleClick = () => {
@@ -16,6 +18,22 @@ const TechnologyCard = ({
     if (onStatusChange) {
       onStatusChange(id, status);
     }
+  };
+
+  // Функция для выделения текста поиска
+  const highlightText = (text, query) => {
+    if (!query.trim()) return text;
+    
+    const regex = new RegExp(`(${query})`, 'gi');
+    const parts = text.split(regex);
+    
+    return parts.map((part, index) =>
+      regex.test(part) ? (
+        <mark key={index} className="search-highlight">{part}</mark>
+      ) : (
+        part
+      )
+    );
   };
 
   // Функция для определения класса статуса
@@ -75,7 +93,7 @@ const TechnologyCard = ({
 
   return (
     <div 
-      className={`technology-card ${getStatusClass(status)} interactive ${isHighlighted ? 'highlighted' : ''}`}
+      className={`technology-card ${getStatusClass(status)} interactive ${isHighlighted ? 'highlighted' : ''} ${searchQuery ? 'search-result' : ''}`}
       onClick={handleClick}
       data-tech-id={id}
       title={`Кликните чтобы изменить статус на: ${getNextStatusText()}`}
@@ -83,16 +101,21 @@ const TechnologyCard = ({
       {isHighlighted && <div className="highlight-overlay"></div>}
       
       <div className="technology-header">
-        <h3 className="technology-title">{title}</h3>
+        <h3 className="technology-title">
+          {searchQuery ? highlightText(title, searchQuery) : title}
+        </h3>
         <span className="status-indicator">
           {renderStatusIcon(status)}
           <span className="status-text">{getStatusText(status)}</span>
+          {hasNotes && <span className="notes-indicator" title="Есть заметки">📝</span>}
           <span className="click-hint">👆</span>
         </span>
       </div>
       
       <div className="technology-description">
-        <p>{description}</p>
+        <p>
+          {searchQuery ? highlightText(description, searchQuery) : description}
+        </p>
       </div>
       
       {/* Индикатор следующего действия */}
