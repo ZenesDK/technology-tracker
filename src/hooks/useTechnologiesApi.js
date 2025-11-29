@@ -42,6 +42,7 @@ const realApiService = {
 
     } catch (error) {
       console.error('Error searching technologies:', error);
+      // Fallback на локальные данные если API недоступно
       return this.createFallbackResults(query);
     }
   },
@@ -343,7 +344,12 @@ function useTechnologiesApi() {
     setTechnologies(prev => {
       const exists = prev.find(t => t.title.toLowerCase() === tech.title.toLowerCase());
       if (exists) {
-        alert(`Технология "${tech.title}" уже есть в вашем трекере!`);
+        // Используем alert как fallback, если уведомления не подключены
+        if (typeof window.showNotification === 'function') {
+          window.showNotification(`Технология "${tech.title}" уже есть в вашем трекере!`, 'warning');
+        } else {
+          alert(`Технология "${tech.title}" уже есть в вашем трекере!`);
+        }
         return prev;
       }
       
@@ -355,7 +361,13 @@ function useTechnologiesApi() {
         importedAt: new Date().toISOString()
       };
       
-      alert(`Технология "${tech.title}" успешно добавлена в трекер!`);
+      // Используем alert как fallback, если уведомления не подключены
+      if (typeof window.showNotification === 'function') {
+        window.showNotification(`Технология "${tech.title}" успешно добавлена в трекер!`, 'success');
+      } else {
+        alert(`Технология "${tech.title}" успешно добавлена в трекер!`);
+      }
+      
       return [...prev, importedTech];
     });
   }, [setTechnologies]);
@@ -367,6 +379,11 @@ function useTechnologiesApi() {
       const technologiesToAdd = newTechnologies.filter(tech => 
         !existingTitles.has(tech.title.toLowerCase())
       );
+      
+      if (technologiesToAdd.length > 0 && typeof window.showNotification === 'function') {
+        window.showNotification(`Успешно импортировано ${technologiesToAdd.length} технологий!`, 'success');
+      }
+      
       return [...prev, ...technologiesToAdd];
     });
   }, [setTechnologies]);
@@ -377,8 +394,12 @@ function useTechnologiesApi() {
       setLoading(true);
       setError(null);
       
-      // Просто показываем сообщение, что нет предустановленных технологий
-      alert('Нет предустановленных технологий. Используйте поиск для добавления технологий из GitHub!');
+      // Используем alert как fallback, если уведомления не подключены
+      if (typeof window.showNotification === 'function') {
+        window.showNotification('Нет предустановленных технологий. Используйте поиск для добавления технологий из GitHub!', 'info');
+      } else {
+        alert('Нет предустановленных технологий. Используйте поиск для добавления технологий из GitHub!');
+      }
       
     } catch (err) {
       setError('Не удалось загрузить технологии');
@@ -395,7 +416,19 @@ function useTechnologiesApi() {
         tech.id === techId ? { ...tech, status: newStatus } : tech
       )
     );
-  }, [setTechnologies]);
+    
+    // Показываем уведомление об изменении статуса
+    const tech = technologies.find(t => t.id === techId);
+    if (tech && typeof window.showNotification === 'function') {
+      const statusText = {
+        'not-started': 'Не начато',
+        'in-progress': 'В процессе',
+        'completed': 'Изучено'
+      }[newStatus];
+      
+      window.showNotification(`Статус "${tech.title}" изменен на "${statusText}"`, 'info');
+    }
+  }, [technologies, setTechnologies]);
 
   const updateNotes = useCallback((techId, newNotes) => {
     setTechnologies(prev => 
@@ -414,32 +447,62 @@ function useTechnologiesApi() {
       resources: newTech.resources || []
     };
     setTechnologies(prev => [...prev, techWithId]);
+    
+    // Показываем уведомление о добавлении
+    if (typeof window.showNotification === 'function') {
+      window.showNotification(`Технология "${newTech.title}" успешно добавлена!`, 'success');
+    }
+    
     return techWithId;
   }, [setTechnologies]);
 
   // Функция для удаления одной технологии
   const removeTechnology = useCallback((techId) => {
+    const tech = technologies.find(t => t.id === techId);
     setTechnologies(prev => prev.filter(tech => tech.id !== techId));
-  }, [setTechnologies]);
+    
+    // Показываем уведомление об удалении
+    if (tech && typeof window.showNotification === 'function') {
+      window.showNotification(`Технология "${tech.title}" удалена`, 'info');
+    }
+  }, [technologies, setTechnologies]);
 
   // Функция для удаления всех технологий
   const removeAllTechnologies = useCallback(() => {
+    const count = technologies.length;
     setTechnologies([]);
-  }, [setTechnologies]);
+    
+    // Показываем уведомление об удалении всех технологий
+    if (count > 0 && typeof window.showNotification === 'function') {
+      window.showNotification(`Все технологии (${count}) удалены`, 'warning');
+    }
+  }, [technologies, setTechnologies]);
 
   // Функция для отметки всех технологий как выполненных
   const markAllCompleted = useCallback(() => {
+    const count = technologies.length;
     setTechnologies(prev => 
       prev.map(tech => ({ ...tech, status: 'completed' }))
     );
-  }, [setTechnologies]);
+    
+    // Показываем уведомление
+    if (count > 0 && typeof window.showNotification === 'function') {
+      window.showNotification(`Все технологии (${count}) отмечены как изученные`, 'success');
+    }
+  }, [technologies, setTechnologies]);
 
   // Функция для сброса всех статусов
   const resetAllStatuses = useCallback(() => {
+    const count = technologies.length;
     setTechnologies(prev => 
       prev.map(tech => ({ ...tech, status: 'not-started' }))
     );
-  }, [setTechnologies]);
+    
+    // Показываем уведомление
+    if (count > 0 && typeof window.showNotification === 'function') {
+      window.showNotification(`Статусы всех технологий (${count}) сброшены`, 'info');
+    }
+  }, [technologies, setTechnologies]);
 
   // Расчет прогресса
   const calculateProgress = useCallback(() => {
