@@ -1,15 +1,85 @@
 /* components/TechnologyCard.css */
 .technology-card {
-  border: 2px solid #e1e8ed;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   margin: 16px 0;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  cursor: default;
+}
+
+/* убираем full-card светлые градиенты — оставляем только ::before stripe */
+.technology-card.status-completed { background-color: var(--surface); }
+.technology-card.status-completed::before { background: linear-gradient(180deg, #10b981 0%, #059669 100%); }
+
+.technology-card.status-in-progress { background-color: var(--surface); }
+.technology-card.status-in-progress::before { background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); }
+
+.technology-card.status-not-started { background-color: var(--surface); }
+.technology-card.status-not-started::before { background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%); }
+
+/* подсказки/ид/описание */
+.technology-description,
+.card-id,
+.next-action-hint {
+  color: var(--text);
+}
+
+/* === THEME SURFACE OVERRIDES for technology cards === */
+.technology-card,
+.technology-card .technology-header,
+.technology-card .technology-description,
+.technology-card .meta-value,
+.technology-card .next-action-hint,
+.technology-card .card-id {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Сохраняем статусную цветную полосу, но фон карточки — surface */
+.technology-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Убираем светлые градиенты статусов как фон карточки, оставляем полосу ::before */
+.technology-card.status-completed {
+  /* background kept as surface */
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: #d1fae5;
+}
+.technology-card.status-completed::before {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+}
+
+.technology-card.status-in-progress {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: #fef3c7;
+}
+.technology-card.status-in-progress::before {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+}
+
+.technology-card.status-not-started {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: #e5e7eb;
+}
+.technology-card.status-not-started::before {
+  background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
+}
+
+/* Ensure status-indicator text readable */
+.status-indicator {
+  color: var(--primary-contrast) !important;
 }
 
 /* Стиль для интерактивных карточек */
@@ -87,7 +157,7 @@
 /* Стили для разных статусов с плавными переходами */
 .technology-card.status-completed {
   border-color: #d1fae5;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background-color: var(--surface);
 }
 
 .technology-card.status-completed::before {
@@ -101,7 +171,7 @@
 
 .technology-card.status-in-progress {
   border-color: #fef3c7;
-  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  background-color: var(--surface);
 }
 
 .technology-card.status-in-progress::before {
@@ -114,8 +184,8 @@
 }
 
 .technology-card.status-not-started {
-  border-color: #e5e7eb;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-color: var(--border);
+  background-color: var(--surface);
 }
 
 .technology-card.status-not-started::before {

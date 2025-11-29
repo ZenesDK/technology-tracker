@@ -3,6 +3,8 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 .page-header {
@@ -71,14 +73,16 @@
 }
 
 .stat-card {
-  background: white;
+  background-color: var(--surface);
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   gap: 16px;
   transition: transform 0.3s ease;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .stat-card:hover {
@@ -115,11 +119,13 @@
 
 /* Контролы */
 .controls-card {
-  background: white;
+  background-color: var(--surface);
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   margin-bottom: 32px;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .controls-row {
@@ -127,6 +133,21 @@
   gap: 24px;
   align-items: end;
   flex-wrap: wrap;
+}
+
+/* Принудительно делаем текст меток адаптивным к теме */
+.controls-row label,
+.filter-group label {
+  font-weight: 600;
+  color: var(--text) !important;
+  font-size: 0.9rem;
+}
+
+/* Принудительно делаем метки в фильтрах адаптивными к теме */
+.filter-group label,
+.filter-group label *,
+.filter-group .form-label {
+  color: var(--text) !important;
 }
 
 .filter-group {
@@ -144,11 +165,12 @@
 }
 
 .filter-select {
+  background-color: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--border);
   padding: 12px 16px;
-  border: 2px solid #e9ecef;
   border-radius: 8px;
   font-size: 1rem;
-  background: white;
   transition: all 0.3s ease;
 }
 
@@ -166,14 +188,15 @@
 }
 
 .tech-card {
-  background: white;
+  background-color: var(--surface);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f3f4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  color: var(--text) !important;
 }
 
 .tech-card:hover {
@@ -216,7 +239,7 @@
   padding: 8px;
   border: none;
   border-radius: 6px;
-  background: #f8f9fa;
+  background: var(--surface) !important;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1rem;
@@ -290,7 +313,7 @@
   display: block;
   margin-bottom: 12px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text);
   font-size: 0.9rem;
 }
 
@@ -303,9 +326,9 @@
 
 .status-btn {
   padding: 10px 8px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--border);
   border-radius: 6px;
-  background: white;
+  background-color: var(--surface);
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.85rem;
@@ -316,29 +339,26 @@
   gap: 4px;
   flex-direction: column;
   min-height: 50px;
+  color: var(--text);
 }
 
 .status-btn:hover {
-  border-color: #667eea;
+  border-color: var(--primary);
   transform: translateY(-1px);
 }
 
+/* Активное состояние — фон остаётся акцентным, текст гарантированно читаемый */
 .status-btn.active {
-  border-color: #667eea;
-  background: #667eea;
-  color: white;
+  border-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--primary-contrast) !important;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
-.current-status {
-  text-align: center;
-  padding: 8px 12px;
-  background: #f8f9fa;
-  border-radius: 6px;
-  font-weight: 600;
-  color: #2c3e50;
-  border: 1px solid #e9ecef;
-}
+/* Специфические активные варианты (цвета оставлены как акцент) — текст тоже контрастный */
+.status-btn:first-child.active { background-color: #95a5a6; border-color: #95a5a6; color: var(--primary-contrast) !important; }
+.status-btn:nth-child(2).active { background-color: #3498db; border-color: #3498db; color: var(--primary-contrast) !important; }
+.status-btn:last-child.active { background-color: #27ae60; border-color: #27ae60; color: var(--primary-contrast) !important; }
 
 /* Заметки */
 .tech-notes {
@@ -346,6 +366,8 @@
   background: #fff3cd;
   border-radius: 8px;
   border-left: 4px solid #ffc107;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .tech-notes strong {
@@ -364,12 +386,13 @@
 
 /* Состояние пустого списка */
 .empty-state {
+  background-color: var(--surface);
+  color: var(--text);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   grid-column: 1 / -1;
   text-align: center;
   padding: 80px 40px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .empty-icon {
@@ -387,6 +410,101 @@
   margin: 0 0 24px 0;
   color: #7f8c8d;
   font-size: 1.1rem;
+}
+
+/* === THEME SURFACE OVERRIDES (ensure dark mode surfaces) === */
+.page,
+.controls-card,
+.stat-card,
+.tech-card,
+.technologies-grid,
+.empty-state,
+.filter-select,
+.btn,
+.btn-icon,
+.filter-group,
+.filter-select,
+.form-input,
+.form-select {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Make button accent text readable */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  color: var(--primary-contrast) !important;
+}
+
+/* Ensure stat-icon and badges contrast */
+.stat-icon,
+.meta-value,
+.stat-value,
+.stat-label {
+  color: var(--text) !important;
+}
+
+/* === LOCAL OVERRIDES FOR TECHNOLOGY LIST PAGE === */
+.active-learning,
+.active-learning .learning-item,
+.recently-added,
+.recent-list,
+.recent-card,
+.popular-categories,
+.popular-categories .category-card,
+.quick-actions-grid,
+.quick-action,
+.quick-action .quick-action-btn,
+.technologies-section,
+.technology-section,
+.home-cards {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
+}
+
+/* Ссылки/кнопки внутри блоков должны быть читабельны */
+.active-learning a,
+.popular-categories a,
+.quick-action a,
+.quick-action .btn {
+  color: var(--primary-contrast) !important;
+}
+
+/* Если в карточках использовались градиенты с белым — убрать */
+.popular-categories .category-card,
+.recently-added .card,
+.fast-actions .quick-action {
+  background-image: none !important;
+  background: var(--surface) !important;
+}
+
+/* === TARGETED OVERRIDES: content-section (TechnologyList) === */
+.content-section,
+.content-section .card,
+.content-section .category-card,
+.content-section .learning-item,
+.content-section .recent-card,
+.content-section .quick-action,
+.content-section .recent-list {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
+}
+
+/* Кнопки внутри content-section */
+.content-section .btn,
+.content-section .btn-primary,
+.content-section .btn-secondary {
+  color: var(--primary-contrast) !important;
 }
 
 /* Адаптивность */
@@ -514,3 +632,61 @@
 .difficulty-badge.beginner { background: #d4edda; color: #155724; }
 .difficulty-badge.intermediate { background: #fff3cd; color: #856404; }
 .difficulty-badge.advanced { background: #f8d7da; color: #721c24; }
+
+/* === TARGETED: tech-meta === */
+.tech-meta,
+.tech-meta .meta-item,
+.tech-meta .meta-label,
+.tech-meta .meta-value,
+.tech-meta .difficulty-badge {
+  background-image: none !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Ensure badges keep contrast */
+.tech-meta .difficulty-badge.beginner,
+.tech-meta .difficulty-badge.intermediate,
+.tech-meta .difficulty-badge.advanced {
+  color: inherit;
+}
+
+/* === LOCAL OVERRIDES: category / quick-action on TechnologyList === */
+.categories-grid,
+.category-card,
+.category-header,
+.category-info,
+.category-name,
+.category-description,
+.quick-actions-grid,
+.quick-action-card,
+.quick-action {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
+}
+
+.category-card .category-icon,
+.category-card .category-name,
+.category-card .category-description {
+  color: var(--text) !important;
+}
+
+/* Сделать текст категорий тёмным */
+.category-card,
+.category-card .category-name,
+.categories-grid .category-card,
+.category-header h3,
+.category-name {
+  color: var(--text-strong) !important;
+}
+
+/* Если есть отдельные элементы с похожими именами */
+.category-info,
+.category-description {
+  color: var(--text-strong) !important;
+}

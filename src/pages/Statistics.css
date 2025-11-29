@@ -3,6 +3,8 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 .page-header {
@@ -63,6 +65,32 @@
   transform: translateY(-1px);
 }
 
+/* === THEME SURFACE OVERRIDES === */
+.page,
+.stats-overview,
+.stat-card,
+.category-card,
+.difficulty-item,
+.learning-item,
+.completion-item,
+.empty-state,
+.progress-ring::before {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* progress-ring inner circle should use surface variable for dark mode */
+.progress-ring::before {
+  background: var(--surface) !important;
+}
+
+/* Buttons and accents */
+.btn-primary,
+.btn-secondary {
+  color: var(--primary-contrast) !important;
+}
+
 /* Общая статистика */
 .stats-overview {
   display: grid;
@@ -72,14 +100,17 @@
 }
 
 .stat-card {
-  background: white;
+  background-color: var(--surface);
   padding: 24px;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   gap: 20px;
   transition: transform 0.3s ease;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .stat-card:hover {
@@ -155,11 +186,12 @@
 }
 
 .category-card {
-  background: white;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   padding: 24px;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f3f4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .category-header {
@@ -207,7 +239,7 @@
   position: absolute;
   width: 70px;
   height: 70px;
-  background: white;
+  background-color: var(--surface);
   border-radius: 50%;
   top: 5px;
   left: 5px;
@@ -282,6 +314,9 @@
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   border-left: 4px solid #667eea;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .difficulty-header {
@@ -312,6 +347,26 @@
   font-size: 1.1rem;
 }
 
+/* === TARGET: difficulty blocks === */
+.difficulty-stats,
+.difficulty-item,
+.difficulty-header,
+.difficulty-count,
+.difficulty-percentage {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
+}
+
+/* Иконки/текст внутри */
+.difficulty-icon,
+.difficulty-name {
+  color: var(--text) !important;
+}
+
 /* Активное изучение */
 .active-learning {
   display: flex;
@@ -328,6 +383,9 @@
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   border-left: 4px solid #3498db;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .tech-info h4 {
@@ -361,11 +419,12 @@
 }
 
 .completion-item {
-  background: white;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border-left: 4px solid #27ae60;
 }
 
 .tech-main h4 {
@@ -389,7 +448,6 @@
 
 .tech-meta .category,
 .tech-meta .hours {
-  background: #f8f9fa;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.8rem;
@@ -408,6 +466,9 @@
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .empty-icon {

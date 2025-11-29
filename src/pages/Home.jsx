@@ -330,30 +330,6 @@ function Home() {
           </div>
         </div>
       </div>
-
-      {/* Мотивационная секция */}
-      {technologies.length > 0 && (
-        <div className="motivation-section">
-          <div className="motivation-content">
-            <h3>🎯 Продолжайте в том же духе!</h3>
-            <p>
-              Вы уже изучили {completedCount} из {technologies.length} технологий. 
-              {inProgressCount > 0 ? ` Сейчас в работе: ${inProgressCount} технологий.` : ''}
-              {progress < 50 ? ' Каждый маленький шаг приближает к большой цели!' : 
-               progress < 80 ? ' Отличный прогресс! Продолжайте двигаться вперед!' :
-               ' Почти у цели! Осталось совсем немного!'}
-            </p>
-            <div className="motivation-actions">
-              <Link to="/technologies" className="btn btn-primary">
-                Продолжить изучение
-              </Link>
-              <Link to="/add-technology" className="btn btn-secondary">
-                Добавить ещё
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
