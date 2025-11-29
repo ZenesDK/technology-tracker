@@ -12,7 +12,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/technology-tracker">
       <div className="app">
         <Navigation />
         
@@ -32,7 +32,7 @@ function App() {
                   <div className="error-icon">🔍</div>
                   <h1>Страница не найдена</h1>
                   <p>Запрошенная страница не существует.</p>
-                  <a href="/" className="btn btn-primary">
+                  <a href="/technology-tracker/" className="btn btn-primary">
                     На главную
                   </a>
                 </div>
