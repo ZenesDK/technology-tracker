@@ -1,62 +1,108 @@
 // components/Navigation.jsx
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navigation.css';
 
 function Navigation() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const isActiveLink = (path) => {
+    return location.pathname === path;
+  };
 
   return (
-    <nav className="main-navigation">
-      <div className="nav-brand">
-        <Link to="/">
-          <h2>🚀 Трекер технологий</h2>
-        </Link>
-      </div>
-      
-      <ul className="nav-menu">
-        <li>
+    <nav className="navigation">
+      <div className="nav-container">
+        {/* Логотип и бренд */}
+        <div className="nav-brand">
+          <Link to="/" className="brand-link" onClick={closeMobileMenu}>
+            <span className="brand-icon">🚀</span>
+            <span className="brand-text">TechTracker</span>
+          </Link>
+        </div>
+
+        {/* Мобильное меню кнопка */}
+        <button 
+          className={`mobile-menu-btn ${isMobileMenuOpen ? 'active' : ''}`}
+          onClick={toggleMobileMenu}
+          aria-label="Переключить меню"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        {/* Навигационные ссылки */}
+        <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
           <Link 
             to="/" 
-            className={`nav-link ${isActive('/') ? 'active' : ''}`}
+            className={`nav-link ${isActiveLink('/') ? 'active' : ''}`}
+            onClick={closeMobileMenu}
           >
-            📊 Главная
+            <span className="nav-icon">🏠</span>
+            <span className="nav-text">Главная</span>
           </Link>
-        </li>
-        <li>
+
           <Link 
             to="/technologies" 
-            className={`nav-link ${isActive('/technologies') ? 'active' : ''}`}
+            className={`nav-link ${isActiveLink('/technologies') ? 'active' : ''}`}
+            onClick={closeMobileMenu}
           >
-            📋 Все технологии
+            <span className="nav-icon">💻</span>
+            <span className="nav-text">Технологии</span>
           </Link>
-        </li>
-        <li>
-          <Link 
-            to="/statistics" 
-            className={`nav-link ${isActive('/statistics') ? 'active' : ''}`}
-          >
-            📈 Статистика
-          </Link>
-        </li>
-        <li>
+
           <Link 
             to="/add-technology" 
-            className={`nav-link ${isActive('/add-technology') ? 'active' : ''}`}
+            className={`nav-link ${isActiveLink('/add-technology') ? 'active' : ''}`}
+            onClick={closeMobileMenu}
           >
-            ➕ Добавить
+            <span className="nav-icon">➕</span>
+            <span className="nav-text">Добавить</span>
           </Link>
-        </li>
-        <li>
+
+          <Link 
+            to="/statistics" 
+            className={`nav-link ${isActiveLink('/statistics') ? 'active' : ''}`}
+            onClick={closeMobileMenu}
+          >
+            <span className="nav-icon">📊</span>
+            <span className="nav-text">Статистика</span>
+          </Link>
+
           <Link 
             to="/settings" 
-            className={`nav-link ${isActive('/settings') ? 'active' : ''}`}
+            className={`nav-link ${isActiveLink('/settings') ? 'active' : ''}`}
+            onClick={closeMobileMenu}
           >
-            ⚙️ Настройки
+            <span className="nav-icon">⚙️</span>
+            <span className="nav-text">Настройки</span>
           </Link>
-        </li>
-      </ul>
+        </div>
+
+        {/* Индикатор текущей страницы для мобильных устройств */}
+        <div className="current-page-mobile">
+          {isActiveLink('/') && 'Главная'}
+          {isActiveLink('/technologies') && 'Технологии'}
+          {isActiveLink('/add-technology') && 'Добавить технологию'}
+          {isActiveLink('/statistics') && 'Статистика'}
+          {isActiveLink('/settings') && 'Настройки'}
+        </div>
+      </div>
+
+      {/* Overlay для мобильного меню */}
+      {isMobileMenuOpen && (
+        <div className="mobile-overlay" onClick={closeMobileMenu}></div>
+      )}
     </nav>
   );
 }
