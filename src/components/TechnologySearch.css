@@ -1,0 +1,240 @@
+/* components/TechnologySearch.css */
+.technology-search {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-header h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+}
+
+.search-header p {
+  margin: 0 0 20px 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.search-input-container {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.clear-search-btn:hover {
+  color: #e74c3c;
+}
+
+.search-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  color: #7f8c8d;
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.search-results h4 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.results-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.tech-result-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.tech-result-card:hover {
+  border-color: #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.tech-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.tech-result-header h5 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.difficulty-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.difficulty-badge.beginner {
+  background: #d4edda;
+  color: #155724;
+}
+
+.difficulty-badge.intermediate {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.difficulty-badge.advanced {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.tech-description {
+  margin: 0 0 12px 0;
+  color: #5a6c7d;
+  line-height: 1.5;
+}
+
+.tech-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.category-tag {
+  background: #e8f4fd;
+  color: #3498db;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.hours-estimate {
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.tech-resources {
+  margin-bottom: 16px;
+}
+
+.tech-resources strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.tech-resources ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.tech-resources li {
+  margin-bottom: 2px;
+}
+
+.tech-resources a {
+  color: #3498db;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.tech-resources a:hover {
+  text-decoration: underline;
+}
+
+.import-tech-btn {
+  width: 100%;
+  padding: 10px 16px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.import-tech-btn:hover {
+  background: #219a52;
+}
+
+.no-results {
+  text-align: center;
+  padding: 32px;
+  color: #7f8c8d;
+}
+
+.no-results p {
+  margin: 0 0 8px 0;
+}
+
+@media (max-width: 768px) {
+  .technology-search {
+    padding: 16px;
+  }
+  
+  .tech-result-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .tech-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

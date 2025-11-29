@@ -1,6 +1,6 @@
 // App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import TechnologyList from './pages/TechnologyList';
@@ -32,7 +32,7 @@ function App() {
                   <div className="error-icon">🔍</div>
                   <h1>Страница не найдена</h1>
                   <p>Запрошенная страница не существует.</p>
-                  <a href="/" className="btn btn-primary">
+                  <a href="#/" className="btn btn-primary">
                     На главную
                   </a>
                 </div>
