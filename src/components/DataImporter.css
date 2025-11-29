@@ -1,0 +1,180 @@
+/* components/DataImporter.css */
+.data-importer {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f3f4;
+}
+
+.importer-header h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.importer-header p {
+  margin: 0 0 24px 0;
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed #bdc3c7;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  background: #fafbfc;
+}
+
+.drop-zone:hover {
+  border-color: #667eea;
+  background: #f8f9fa;
+}
+
+.drop-zone.dragging {
+  border-color: #667eea;
+  background: #e8f4fd;
+  transform: scale(1.02);
+}
+
+.drop-zone.error {
+  border-color: #e74c3c;
+  background: #fdedec;
+}
+
+.drop-zone.success {
+  border-color: #27ae60;
+  background: #edf7f0;
+}
+
+.drop-zone-content {
+  pointer-events: none;
+}
+
+.drop-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.drop-text {
+  margin: 0;
+  color: #5a6c7d;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.file-input {
+  display: none;
+}
+
+/* Сообщения */
+.import-error,
+.import-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.import-error {
+  background: #fdedec;
+  border: 1px solid #fadbd8;
+}
+
+.import-success {
+  background: #edf7f0;
+  border: 1px solid #d4edda;
+}
+
+.error-icon,
+.success-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.error-content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #c0392b;
+}
+
+.success-content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #27ae60;
+}
+
+.error-content p,
+.success-content p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.error-content p {
+  color: #c0392b;
+}
+
+.success-content p {
+  color: #27ae60;
+}
+
+/* Помощь */
+.import-help {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.import-help h4 {
+  margin: 0 0 12px 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.import-help ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.import-help li {
+  padding: 8px 0;
+  color: #5a6c7d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.import-help li:not(:last-child) {
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .data-importer {
+    padding: 20px;
+  }
+  
+  .drop-zone {
+    padding: 30px 15px;
+  }
+  
+  .drop-text {
+    font-size: 1rem;
+  }
+  
+  .import-error,
+  .import-success {
+    flex-direction: column;
+    text-align: center;
+  }
+}
