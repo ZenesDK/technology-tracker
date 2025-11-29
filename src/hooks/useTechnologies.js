@@ -117,12 +117,7 @@ function useTechnologies() {
     const categories = {};
     technologies.forEach(tech => {
       if (!categories[tech.category]) {
-        categories[tech.category] = { 
-          total: 0, 
-          completed: 0,
-          inProgress: 0,
-          notStarted: 0
-        };
+        categories[tech.category] = { total: 0, completed: 0, inProgress: 0, notStarted: 0 };
       }
       categories[tech.category].total++;
       if (tech.status === 'completed') {
@@ -138,7 +133,7 @@ function useTechnologies() {
 
   // Мемоизированные значения
   const progress = useMemo(() => calculateProgress(), [calculateProgress]);
-  const categoryStats = useMemo(() => getCategoryStats(), [getCategoryStats]);
+  const categoryStats = useMemo(() => getCategoryStats(), [getCategoryStats]); // Теперь используется
   const completedCount = useMemo(() => 
     technologies.filter(tech => tech.status === 'completed').length, 
     [technologies]
@@ -148,6 +143,7 @@ function useTechnologies() {
     [technologies]
   );
 
+  // Добавим в возвращаемый объект:
   return {
     technologies,
     updateStatus,
@@ -157,7 +153,7 @@ function useTechnologies() {
     addTechnology,
     removeTechnology,
     progress,
-    categoryStats,
+    categoryStats, // Используем мемоизированное значение вместо вызова функции
     completedCount,
     inProgressCount,
     totalCount: technologies.length
