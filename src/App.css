@@ -63,13 +63,8 @@
 }
 
 body {
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
 /* ===== ОСНОВНОЙ КОНТЕЙНЕР ПРИЛОЖЕНИЯ ===== */
@@ -903,62 +898,6 @@ body {
 }
 
 .category-progress h3 {
-  margin: 0 0 1rem 0;
-  color: #374151;
-  text-align: center;
-}
-
-.category-bars {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-}
-
-.category-progress-item {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.category-name {
-  font-weight: 600;
-  color: #374151;
-}
-
-.category-stats {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-weight: 600;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .category-bars {
-    grid-template-columns: 1fr;
-  }
-}
-
-.main-progress-bar {
-  margin: 1rem 0;
-}
-
-.category-progress {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.category-progress h3 {
   margin: 0 0 1.5rem 0;
   color: #374151;
   text-align: center;
@@ -969,97 +908,6 @@ body {
 .category-bars {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.category-progress-item {
-  background: white;
-  padding: 1.25rem;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.category-progress-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  min-height: 1.5rem; /* Гарантируем минимальную высоту */
-}
-
-.category-name {
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.95rem;
-}
-
-.category-stats {
-  font-size: 0.85rem;
-  color: #6b7280;
-  font-weight: 600;
-  background: #f3f4f6;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-}
-
-/* Главный прогресс-бар в хедере */
-.header-content .progress-bar-container {
-  max-width: 600px;
-  margin: 1rem auto;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .category-bars {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .category-progress {
-    padding: 1rem;
-  }
-  
-  .category-progress-item {
-    padding: 1rem;
-  }
-  
-  .category-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .category-stats {
-    align-self: flex-end;
-  }
-}
-
-.category-progress {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.category-progress h3 {
-  margin: 0 0 1.5rem 0;
-  color: #374151;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.category-bars {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
@@ -1321,134 +1169,241 @@ body {
   }
 }
 
-/* Общие стили для страниц */
-.page {
-  min-height: calc(100vh - 80px);
-  background: #f8fafc;
+/* === FINAL WHITE -> SURFACE REPLACEMENTS === */
+.page-header,
+.app-header,
+.app-footer,
+.app-main,
+.app,
+.page,
+.card,
+.detail-card,
+.tech-card,
+.technology-card,
+.stat-card,
+.category-card,
+.resource-item,
+.resource-link,
+.controls-card,
+.tips-card,
+.data-action,
+.quick-action,
+.empty-state,
+.completion-item,
+.settings-section,
+.settings-page {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
 }
 
-.app-main {
-  flex: 1;
+/* === TARGETED SURFACE OVERRIDES FOR MAIN PAGE SECTIONS ===
+   Гарантируем, что перечисленные блоки используют переменные темы и не остаются белыми.
+*/
+.active-learning,
+.learning-item,
+.recently-added,
+.recent-list,
+.recent-card,
+.recently-added .card,
+.popular-categories,
+.popular-categories .category-card,
+.categories-grid,
+.category-card,
+.quick-actions-grid,
+.quick-action,
+.quick-action .btn,
+.fast-actions,
+.recommendations,
+.recommendation-card,
+.home-section,
+.home-cards,
+.section .card {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
 }
 
-/* Кнопки */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-  justify-content: center;
+/* Доп. защита: любой селектор содержащий слова recent/popular/quick/home */
+[class*="recent"],
+[class*="popular"],
+[class*="quick"],
+[class*="home"],
+[class*="recommend"] {
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
 }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* Ensure CTA buttons inside these blocks have readable text */
+.active-learning .btn,
+.popular-categories .btn,
+.quick-action .btn {
+  color: var(--primary-contrast) !important;
 }
 
-.btn-primary {
-  background: #3b82f6;
-  color: white;
+/* === GLOBAL OVERRIDE: content-section (force theme surfaces) === */
+.content-section,
+.content-section .card,
+.content-section .category-card,
+.content-section .learning-item,
+.content-section .recent-card,
+.content-section .quick-action,
+.content-section .recent-list,
+[class*="content-section"] {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background: #2563eb;
+.content-section .btn,
+.content-section .btn-primary,
+.content-section .btn-secondary {
+  color: var(--primary-contrast) !important;
+}
+
+/* === TARGETED: quick-action-card === */
+.quick-action-card,
+.quick-action-card .card,
+.quick-action-card .quick-action,
+.quick-action-card .quick-action-btn,
+.quick-action-card .quick-action-content {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
+}
+
+/* Ensure buttons inside quick-action-card readable */
+.quick-action-card .btn,
+.quick-action-card .btn-primary,
+.quick-action-card .btn-secondary {
+  color: var(--primary-contrast) !important;
+}
+
+/* Safety: catch variants with similar names */
+[class*="quick-action-card"],
+[class^="quick-action-card"] {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+/* === FORCE THEME FOR CATEGORY / DIFFICULTY / QUICK-ACTION CARD === */
+.category-card,
+.category-header,
+.category-info,
+.category-name,
+.category-description,
+.difficulty-item,
+.difficulty-stats,
+.difficulty-header,
+.difficulty-count,
+.difficulty-percentage,
+.quick-action-card,
+.quick-action,
+.quick-action .quick-action-content,
+.quick-action .quick-action-btn,
+.quick-actions-grid {
+  background-image: none !important;
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important;
+}
+
+/* Кнопки и акценты внутри этих блоков — читаемые */
+.category-card .btn,
+.difficulty-item .btn,
+.quick-action-card .btn,
+.quick-action .btn {
+  color: var(--primary-contrast) !important;
+}
+
+/* Fix: motivation-action buttons contrast */
+.motivation-action .btn,
+.motivation-action .btn-primary,
+.motivation-action .btn-secondary {
+  background-color: var(--primary) !important;
+  color: var(--primary-contrast) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Ensure hover/active remain readable */
+.motivation-action .btn:hover,
+.motivation-action .btn-primary:hover,
+.motivation-action .btn-secondary:hover {
+  filter: brightness(0.95);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-.btn-secondary {
-  background: #6b7280;
-  color: white;
+/* Dark-theme explicit */
+.dark-theme .motivation-action .btn,
+.dark-theme .motivation-action .btn-primary,
+.dark-theme .motivation-action .btn-secondary {
+  background-color: var(--primary) !important;
+  color: var(--primary-contrast) !important;
+  border-color: var(--primary) !important;
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background: #4b5563;
+/* === FORCE STYLES FOR PRIMARY LARGE AND SECONDARY BUTTONS === */
+/* Большие primary-кнопки: градиент из переменных темы, контрастный текст */
+.btn.btn-primary.btn-large,
+.btn-primary.btn-large,
+button.btn.btn-primary.btn-large,
+.MuiButton-containedPrimary.btn-large,
+.MuiButton-containedPrimary.MuiButton-sizeLarge {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark, rgba(0,0,0,0.05)) 100%) !important;
+  color: var(--primary-contrast) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08) !important;
 }
 
-.btn-success {
-  background: #10b981;
-  color: white;
+/* Hover/active для больших primary */
+.btn.btn-primary.btn-large:hover,
+.btn-primary.btn-large:hover,
+.MuiButton-containedPrimary.btn-large:hover,
+.MuiButton-containedPrimary.MuiButton-sizeLarge:hover {
+  filter: brightness(0.96);
+  transform: translateY(-2px);
 }
 
-.btn-success:hover:not(:disabled) {
-  background: #059669;
+/* Secondary кнопки: фоновый цвет и контрастный текст */
+.btn.btn-secondary,
+.btn-secondary,
+button.btn.btn-secondary,
+.MuiButton-containedSecondary,
+.MuiButton-contained.MuiButton-containedSecondary {
+  background-color: var(--secondary-color, #6b7280) !important;
+  color: var(--primary-contrast) !important;
+  border: 1px solid var(--secondary-color, #6b7280) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
 }
 
-.btn-warning {
-  background: #f59e0b;
-  color: white;
+/* Hover/active для secondary */
+.btn.btn-secondary:hover,
+.btn-secondary:hover,
+.MuiButton-containedSecondary:hover {
+  filter: brightness(0.95);
+  transform: translateY(-2px);
 }
 
-.btn-warning:hover:not(:disabled) {
-  background: #d97706;
-}
-
-.btn-outline {
-  background: transparent;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
-}
-
-.btn-outline:hover:not(:disabled) {
-  background: #3b82f6;
-  color: white;
-}
-
-/* Заголовки страниц */
-.page-header {
-  background: white;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.page-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: #1f2937;
-  font-size: 2rem;
-}
-
-.page-header p {
-  margin: 0;
-  color: #6b7280;
-  font-size: 1.1rem;
-}
-
-/* Сетка технологий */
-.technologies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
-  padding: 0 2rem 2rem;
-}
-
-.tech-card-with-notes {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .page-header {
-    padding: 1rem;
-    text-align: center;
-  }
-  
-  .page-header h1 {
-    font-size: 1.5rem;
-  }
-  
-  .technologies-grid {
-    grid-template-columns: 1fr;
-    padding: 0 1rem 1rem;
-    gap: 1rem;
-  }
+/* Safety: if inline styles try to force white bg on these buttons — override */
+.btn.btn-primary.btn-large[style*="background: white"],
+.btn.btn-primary.btn-large[style*="#fff"],
+.btn.btn-secondary[style*="background: white"],
+.btn.btn-secondary[style*="#fff"] {
+  background-color: unset !important;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark, rgba(0,0,0,0.05)) 100%) !important;
+  color: var(--primary-contrast) !important;
+  border-color: var(--secondary-color, #6b7280) !important;
 }

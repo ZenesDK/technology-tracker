@@ -1,13 +1,461 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* === THEME VARIABLES === */
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --text-strong: #0b1220; /* для заголовков категорий в светлой теме */
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --primary: #667eea;
+  --primary-contrast: #ffffff;
+  --scrollbar-track: #f8fafc;
+  --scrollbar-thumb: #cbd5e1;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Тёмная тема */
+.dark-theme {
+  --bg: #0f172a;
+  --surface: #111827;
+  --text: #e6eef8;
+  --text-strong: #e6eef8; /* в тёмной теме заголовки тоже должны быть светлыми */
+  --muted: #94a3b8;
+  --border: #334155;
+  --primary: #a5b4fc;
+  --primary-contrast: #ffffff;
+  --scrollbar-track: #0f172a;
+  --scrollbar-thumb: #334155;
+}
+
+/* === DARK THEME GLOBAL OVERRIDES ===
+   Принудительно делает все "surface" элементы тёмными и текст светлым при наличии класса .dark-theme на <html>.
+*/
+.dark-theme {
+  /* значения переменных для безопасности (если ещё не заданы) */
+  --bg: #0f172a;
+  --surface: #111827;
+  --text: #e6eef8;
+  --text-strong: #e6eef8;
+  --muted: #94a3b8;
+  --border: #334155;
+  --primary-contrast: #ffffff;
+}
+
+/* Базовые поверхности */
+.dark-theme body,
+.dark-theme .page,
+.dark-theme .app,
+.dark-theme .app-main,
+.dark-theme .app-header,
+.dark-theme .app-footer,
+.dark-theme .card,
+.dark-theme .detail-card,
+.dark-theme .tech-card,
+.dark-theme .technology-card,
+.dark-theme .stat-card,
+.dark-theme .category-card,
+.dark-theme .resource-item,
+.dark-theme .resource-link,
+.dark-theme .controls-card,
+.dark-theme .tips-card,
+.dark-theme .data-action,
+.dark-theme .quick-action,
+.dark-theme .quick-action-card,
+.dark-theme .empty-state,
+.dark-theme .completion-item,
+.dark-theme .settings-section,
+.dark-theme .settings-page,
+.dark-theme .content-section,
+.dark-theme .categories-grid,
+.dark-theme .technologies-grid,
+.dark-theme .statistics-panel,
+.dark-theme .progress-ring::before,
+.dark-theme .notes-content {
+  background-image: none !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5) !important;
+}
+
+/* Заголовки/акценты — делают текст читаемым */
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3,
+.dark-theme h4,
+.dark-theme h5,
+.dark-theme h6,
+.dark-theme p,
+.dark-theme a,
+.dark-theme li,
+.dark-theme span {
+  color: var(--text) !important;
+}
+
+/* Категории — заголовки тёмные/контрастные в light-mode, в dark-mode использовать светлый */
+.category-name,
+.category-card .category-name,
+.category-header h3 {
+  color: var(--text-strong) !important;
+}
+
+/* Кнопки: акцентный текст читабельный поверх градиентов */
+.dark-theme .btn-primary,
+.dark-theme .btn-success,
+.dark-theme .btn-warning,
+.dark-theme .btn-danger,
+.dark-theme .btn-large,
+.dark-theme .MuiButton-contained {
+  color: var(--primary-contrast) !important;
+}
+
+/* Полоска статуса (::before) — сохраняем цветную полосу, но фон карточки surface */
+.dark-theme .technology-card::before {
+  /* оставляем полосу как есть, фон карточки уже surface */
+}
+
+/* Статус-бейджи: делаем фон тёмнее и текст светлым для читаемости */
+.dark-theme .status-badge,
+.dark-theme .status-badge * {
+  color: var(--text) !important;
+  background-color: rgba(255,255,255,0.03) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Специфичные статусы: in-progress/completed/not-started */
+.dark-theme .status-badge.status-in-progress {
+  background-color: rgba(245,158,11,0.12) !important;
+  color: var(--text) !important;
+  border-color: rgba(245,158,11,0.18) !important;
+}
+.dark-theme .status-badge.status-completed {
+  background-color: rgba(16,185,129,0.12) !important;
+  color: var(--text) !important;
+  border-color: rgba(16,185,129,0.18) !important;
+}
+.dark-theme .status-badge.status-not-started {
+  background-color: rgba(107,114,128,0.12) !important;
+  color: var(--text) !important;
+  border-color: rgba(107,114,128,0.18) !important;
+}
+
+/* Доп. защита для контентных секций (recent, popular, quick-actions и т.д.) */
+.dark-theme .content-section,
+.dark-theme .recently-added,
+.dark-theme .popular-categories,
+.dark-theme .active-learning,
+.dark-theme .quick-actions-grid,
+.dark-theme .quick-action-card,
+.dark-theme .learning-item,
+.dark-theme .recent-card,
+.dark-theme .category-card,
+.dark-theme .difficulty-item {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Формы/инпуты/селекты — surface и светлый текст */
+.dark-theme input,
+.dark-theme textarea,
+.dark-theme select,
+.dark-theme .form-input,
+.dark-theme .form-select,
+.dark-theme .form-textarea,
+.dark-theme .filter-select {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Навигация / AppBar — если AppBar использует MUI, цвет текста оставить светлым */
+.dark-theme .MuiAppBar-root,
+.dark-theme .MuiAppBar-root * {
+  color: var(--primary-contrast) !important;
+}
+
+/* Скроллбар тёмной темы */
+.dark-theme ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+.dark-theme ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); }
+
+/* Убедительная финальная защита: любые селекторы, которые явно писали white, перекрываем */
+.dark-theme [style*="background: white"],
+.dark-theme [style*="background: #fff"],
+.dark-theme [style*="background: #ffffff"] {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+/* === FINAL FORCE OVERRIDES FOR DARK THEME ===
+   При наличии класса .dark-theme на <html> принудительно делаем поверхностные блоки тёмными,
+   а текст — светлым. Исключаем мультимедиа и элементы с data-keep-color.
+*/
+.dark-theme body,
+.dark-theme .page,
+.dark-theme .app,
+.dark-theme .app-main,
+.dark-theme .app-header,
+.dark-theme .app-footer,
+.dark-theme .card,
+.dark-theme .detail-card,
+.dark-theme .tech-card,
+.dark-theme .technology-card,
+.dark-theme .stat-card,
+.dark-theme .category-card,
+.dark-theme .resource-item,
+.dark-theme .resource-link,
+.dark-theme .controls-card,
+.dark-theme .tips-card,
+.dark-theme .data-action,
+.dark-theme .quick-action,
+.dark-theme .quick-action-card,
+.dark-theme .empty-state,
+.dark-theme .completion-item,
+.dark-theme .settings-section,
+.dark-theme .settings-page,
+.dark-theme .content-section,
+.dark-theme .categories-grid,
+.dark-theme .technologies-grid,
+.dark-theme .statistics-panel,
+.dark-theme .notes-content,
+.dark-theme .current-status-display,
+.dark-theme .status-btn,
+.dark-theme .tech-meta,
+.dark-theme .quick-action-card,
+.dark-theme .motivation-action,
+.dark-theme .motivation-content,
+.dark-theme .motivation-actions {
+  background-image: none !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35) !important;
+}
+
+/* Принудительно перекрываем inline-стили с белым фоном */
+.dark-theme [style*="background: white"],
+.dark-theme [style*="background:#fff"],
+.dark-theme [style*="background: #fff"],
+.dark-theme [style*="background:#ffffff"],
+.dark-theme [style*="background: #ffffff"],
+.dark-theme [style*="background: rgb(255, 255, 255)"] {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  background-image: none !important;
+  border-color: var(--border) !important;
+}
+
+/* Частые проблемные элементы — обеспечить читаемость */
+.dark-theme .category-name,
+.dark-theme .category-card .category-name,
+.dark-theme .category-header h3,
+.dark-theme .status-badge,
+.dark-theme .status-badge * {
+  color: var(--text) !important;
+}
+
+/* Статусы: сохранить акцентную полосу, но фон бейджа — тёмный и текст светлый */
+.dark-theme .status-badge.status-in-progress {
+  background-color: rgba(245,158,11,0.12) !important;
+  color: var(--text) !important;
+  border-color: rgba(245,158,11,0.18) !important;
+}
+.dark-theme .status-badge.status-completed {
+  background-color: rgba(16,185,129,0.12) !important;
+  color: var(--text) !important;
+  border-color: rgba(16,185,129,0.18) !important;
+}
+.dark-theme .status-badge.status-not-started {
+  background-color: rgba(107,114,128,0.12) !important;
+  color: var(--text) !important;
+  border-color: rgba(107,114,128,0.18) !important;
+}
+
+/* Кнопки: primary/secondary внутри motivation и других блоков — гарантируем контраст */
+.dark-theme .motivation-content .btn.btn-primary,
+.dark-theme .motivation-actions .btn.btn-primary,
+.dark-theme .motivation-content .btn.btn-secondary,
+.dark-theme .motivation-actions .btn.btn-secondary,
+.dark-theme .btn.btn-primary,
+.dark-theme .btn.btn-secondary,
+.dark-theme .btn-primary,
+.dark-theme .btn-secondary,
+.dark-theme .MuiButton-containedPrimary,
+.dark-theme .MuiButton-containedSecondary {
+  color: var(--primary-contrast) !important;
+  background-color: unset; /* позволяем классу задать акцентный фон, но текст будет контрастным */
+}
+
+/* Исключения: не трогаем медиа-ресурсы и элементы с явной пометкой */
+.dark-theme img,
+.dark-theme svg,
+.dark-theme video,
+.dark-theme canvas,
+.dark-theme [data-keep-color] {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Последняя попытка: любые элементы внутри content-section — surface/text */
+.dark-theme .content-section *:not(img):not(svg):not(video):not(canvas):not([data-keep-color]) {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+/* Исправление для кнопок btn-secondary */
+:root .btn-secondary {
+  color: #374151 !important;
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+:root .btn-secondary:hover {
+  color: #1f2937 !important;
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+}
+
+/* Для темной темы - темный фон и светлый текст */
+.dark-theme .btn-secondary {
+  color: #e5e7eb !important;
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.dark-theme .btn-secondary:hover {
+  color: #f9fafb !important;
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+/* Кнопки в модальных окнах */
+:root .modal-actions .btn-secondary {
+  color: #374151 !important;
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+:root .modal-actions .btn-secondary:hover {
+  color: #1f2937 !important;
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+}
+
+.dark-theme .modal-actions .btn-secondary {
+  color: #e5e7eb !important;
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.dark-theme .modal-actions .btn-secondary:hover {
+  color: #f9fafb !important;
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+/* Специфичные стили для action-card в Settings */
+.settings-section .action-card .btn.btn-secondary {
+  color: #374151 !important;
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+.settings-section .action-card .btn.btn-secondary:hover {
+  color: #1f2937 !important;
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+}
+
+.dark-theme .settings-section .action-card .btn.btn-secondary {
+  color: #e5e7eb !important;
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.dark-theme .settings-section .action-card .btn.btn-secondary:hover {
+  color: #f9fafb !important;
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+/* Исправление для компонентов DataExporter и DataImporter в темной теме */
+.dark-theme .data-exporter,
+.dark-theme .data-importer,
+.dark-theme [class*="data-export"],
+.dark-theme [class*="data-import"] {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.dark-theme .data-exporter *:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-danger),
+.dark-theme .data-importer *:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-danger) {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Специфичные элементы внутри этих компонентов */
+.dark-theme .export-info,
+.dark-theme .export-stats,
+.dark-theme .export-actions,
+.dark-theme .import-info,
+.dark-theme .import-instructions,
+.dark-theme .file-input-wrapper {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.dark-theme .file-input {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 2px dashed var(--border) !important;
+}
+
+.dark-theme .file-input:hover {
+  border-color: var(--primary) !important;
+}
+
+/* Исправление для всех кнопок danger в светлой теме */
+:root .btn-danger {
+  color: white !important;
+  background-color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
+}
+
+:root .btn-danger:hover {
+  color: white !important;
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
+}
+
+/* Для темной темы можно сделать немного светлее при hover */
+.dark-theme .btn-danger {
+  color: white !important;
+  background-color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
+}
+
+.dark-theme .btn-danger:hover {
+  color: white !important;
+  background-color: #e74c3c !important;
+  border-color: #e74c3c !important;
+}
+
+/* Специфично для danger-zone в Settings */
+.settings-section.danger-zone .action-card.danger .btn.btn-danger {
+  color: white !important;
+  background-color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
+}
+
+.settings-section.danger-zone .action-card.danger .btn.btn-danger:hover {
+  color: white !important;
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
+}
+
+.dark-theme .settings-section.danger-zone .action-card.danger .btn.btn-danger:hover {
+  background-color: #e74c3c !important;
+  border-color: #e74c3c !important;
 }

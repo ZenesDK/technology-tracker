@@ -3,6 +3,8 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 .page-header {
@@ -69,10 +71,30 @@
   font-size: 1.1rem;
 }
 
+/* === THEME SURFACE OVERRIDES === */
+.page,
+.card,
+.tip-item,
+.tips-card,
+.form-input,
+.form-select,
+.form-textarea,
+.success-message {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Button contrast */
+.btn-primary,
+.btn-large {
+  color: var(--primary-contrast) !important;
+}
+
 /* Сообщение об успехе */
 .success-message {
   background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  color: #155724;
+  color: var(--text);
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 24px;
@@ -97,11 +119,12 @@
 
 /* Карточки */
 .card {
-  background: white;
+  background-color: var(--surface);
+  color: var(--text) !important;
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f3f4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
   margin-bottom: 24px;
@@ -177,7 +200,9 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   font-family: inherit;
-  background: white;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
 
 .form-input:focus,
@@ -247,12 +272,30 @@
 
 .tip-item {
   padding: 24px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-color: var(--surface);
   border-radius: 12px;
   border-left: 4px solid #667eea;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  background-color: var(--surface) !important;
+  color: var(--text) !important; /* адаптивный цвет по теме */
+  border: 1px solid var(--border) !important;
+}
+
+/* Убедиться, что все вложенные элементы наследуют читаемый цвет */
+.tip-item *,
+.tip-item h3,
+.tip-item strong,
+.tip-item p,
+.tip-item a {
+  color: inherit !important;
+}
+
+/* В тёмной теме делаем текст внутри tip-item светлым (гарантия) */
+.dark-theme .tip-item,
+.dark-theme .tip-item * {
+  color: var(--primary-contrast) !important;
 }
 
 .tip-item:hover {
@@ -283,6 +326,41 @@
   color: #5a6c7d;
   line-height: 1.6;
   font-size: 0.95rem;
+}
+
+/* Стили для TechnologySearch внутри страницы */
+.technology-search {
+  margin-bottom: 32px;
+  animation: fadeInUp 0.6s ease 0.2s both;
+}
+
+/* FORCE: make technology-search follow theme variables (surface/text/border) */
+.technology-search,
+.technology-search * {
+  background-image: none !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Specific inputs / wrappers inside search to ensure accessibility */
+.technology-search .search-input,
+.technology-search .form-input,
+.technology-search input,
+.technology-search textarea,
+.technology-search select {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Prevent white-only hover states that break dark mode */
+.technology-search .quick-result,
+.technology-search .result-item,
+.technology-search .search-clear-btn,
+.technology-search .search-results-info {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
 }
 
 /* Адаптивность */
@@ -396,8 +474,76 @@
   }
 }
 
-/* Стили для TechnologySearch внутри страницы */
-.technology-search {
-  margin-bottom: 32px;
-  animation: fadeInUp 0.6s ease 0.2s both;
+/* TARGETED OVERRIDES: manual form card - ensure readable in dark theme */
+.card.manual-form-card,
+.card.manual-form-card * {
+  background-image: none !important;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.card.manual-form-card h2,
+.card.manual-form-card h3,
+.card.manual-form-card p,
+.card.manual-form-card .form-label,
+.card.manual-form-card .form-hint,
+.card.manual-form-card .card-header h2,
+.card.manual-form-card .card-header p {
+  color: var(--text) !important;
+}
+
+/* Inputs / selects / textareas inside manual form */
+.card.manual-form-card .form-input,
+.card.manual-form-card .form-select,
+.card.manual-form-card .form-textarea,
+.card.manual-form-card input,
+.card.manual-form-card textarea,
+.card.manual-form-card select {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Buttons inside manual form keep contrast but text remains readable */
+.card.manual-form-card .btn,
+.card.manual-form-card .btn-primary,
+.card.manual-form-card .btn-secondary {
+  color: var(--primary-contrast) !important;
+}
+
+/* TARGETED: manual-form-card buttons contrast */
+.card.manual-form-card .form-actions .btn.btn-primary.btn-large,
+.card.manual-form-card .form-actions button.btn.btn-primary.btn-large {
+  background: var(--primary) !important;
+  color: var(--primary-contrast) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08) !important;
+}
+
+.card.manual-form-card .form-actions .btn.btn-primary.btn-large:hover,
+.card.manual-form-card .form-actions button.btn.btn-primary.btn-large:hover {
+  filter: brightness(0.96);
+  transform: translateY(-2px);
+}
+
+/* Secondary inside manual form */
+.card.manual-form-card .form-actions .btn.btn-secondary,
+.card.manual-form-card .form-actions button.btn.btn-secondary {
+  background-color: var(--secondary-color, #6b7280) !important;
+  color: var(--primary-contrast) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+
+.card.manual-form-card .form-actions .btn.btn-secondary:hover,
+.card.manual-form-card .form-actions button.btn.btn-secondary:hover {
+  filter: brightness(0.95);
+  transform: translateY(-2px);
+}
+
+/* Dark theme safety: keep contrast (variables drive colors) */
+.dark-theme .card.manual-form-card .form-actions .btn.btn-primary.btn-large,
+.dark-theme .card.manual-form-card .form-actions .btn.btn-secondary {
+  color: var(--primary-contrast) !important;
 }

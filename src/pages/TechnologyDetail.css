@@ -3,6 +3,8 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 .page-header {
@@ -107,11 +109,11 @@
 }
 
 .detail-card {
-  background: white;
+  background-color: var(--surface);
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f3f4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
 }
@@ -180,9 +182,9 @@
 .info-value.description {
   line-height: 1.6;
   padding: 16px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
+  background-color: var(--surface);
+  color: var(--text);
+  border-left: 4px solid var(--primary);
 }
 
 /* Бейджи статусов */
@@ -214,6 +216,12 @@
   border: 1px solid #c3e6cb;
 }
 
+/* Сделать текст в статус-бейдже тёмным */
+.status-badge,
+.status-badge * {
+  color: var(--text-strong) !important;
+}
+
 /* Ресурсы */
 .resources-list {
   display: flex;
@@ -222,10 +230,11 @@
 }
 
 .resource-item {
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
   transition: all 0.3s ease;
+  background-color: var(--surface);
 }
 
 .resource-item:hover {
@@ -241,7 +250,7 @@
   padding: 16px;
   text-decoration: none;
   color: inherit;
-  background: white;
+  background-color: var(--surface);
   transition: background 0.3s ease;
 }
 
@@ -284,6 +293,7 @@
   text-align: center;
   padding: 40px 20px;
   color: #7f8c8d;
+  background-color: var(--surface) !important;
 }
 
 .empty-icon {
@@ -312,61 +322,57 @@
 
 .status-btn {
   padding: 20px 12px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--border);
   border-radius: 12px;
-  background: white;
+  background-color: var(--surface);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  color: var(--text);
 }
 
 .status-btn:hover {
-  border-color: #667eea;
+  border-color: var(--primary);
   transform: translateY(-2px);
 }
 
 .status-btn.active {
-  border-color: #667eea;
-  background: #667eea;
-  color: white;
+  border-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--primary-contrast) !important;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.status-icon {
-  font-size: 1.5rem;
+/* Если есть специфические классы для статусов — обеспечить читаемость текста */
+.status-btn.status-in-progress.active,
+.status-btn.status-completed.active,
+.status-btn.status-not-started.active {
+  color: var(--primary-contrast) !important;
 }
 
-.status-text {
-  font-weight: 600;
-  font-size: 0.9rem;
+/* Явный override для тёмной темы (на случай перекрытий) */
+.dark-theme .status-btn {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.dark-theme .status-btn.active {
+  background-color: var(--primary) !important;
+  color: var(--primary-contrast) !important;
 }
 
-.current-status-display {
-  text-align: center;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 10px;
+/* Явный override для тёмной темы — если что-то всё ещё перекрывает */
+.dark-theme .current-status-display {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
 }
 
-.current-status-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #2c3e50;
-  font-size: 0.9rem;
-}
-
-.current-status {
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.dark-theme .current-status {
+  color: var(--text) !important;
+  background-color: transparent;
 }
 
 /* Заметки */
@@ -396,9 +402,9 @@
 
 .notes-content {
   padding: 20px;
-  background: #f8f9fa;
+  background-color: var(--surface);
   border-radius: 10px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid var(--primary);
   line-height: 1.6;
   color: #5a6c7d;
 }
@@ -431,6 +437,38 @@
   margin: 0 0 24px 0;
   color: #7f8c8d;
   font-size: 1.1rem;
+}
+
+/* === THEME SURFACE OVERRIDES === */
+.page,
+.detail-card,
+.main-info-card,
+.resources-list,
+.resource-item,
+.resource-link,
+.notes-content,
+.current-status-display,
+.empty-resources,
+.status-controls {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Ensure readable status badges */
+.status-badge,
+.status-not-started,
+.status-in-progress,
+.status-completed {
+  color: var(--text) !important;
+}
+
+/* Dark theme: сделать badge "in-progress" тёмным и читаемым */
+.dark-theme .status-badge.status-in-progress {
+  background-color: #0f2b2f !important; /* тёмный фон для в процессе */
+  color: var(--text) !important;        /* светлый читаемый текст */
+  border-color: rgba(245, 158, 11, 0.18) !important; /* тонкая акцентная граница */
+  box-shadow: none !important;
 }
 
 /* Адаптивность */

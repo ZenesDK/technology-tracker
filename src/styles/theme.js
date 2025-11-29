@@ -100,10 +100,13 @@ export const lightTheme = createTheme({
         },
       },
     },
+    // Заменил прежние обширные глобальные правила на более точечные
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          scrollbarColor: "#6b6b6b #2b2b2b",
+          color: '#1f2937',
+          backgroundColor: '#f8fafc',
+          scrollbarColor: "#6b6b6b #f1f5f9",
           "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
             backgroundColor: "#f8fafc",
             width: 8,
@@ -113,16 +116,26 @@ export const lightTheme = createTheme({
             backgroundColor: "#cbd5e1",
             minHeight: 24,
           },
-          "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus": {
-            backgroundColor: "#94a3b8",
-          },
-          "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active": {
-            backgroundColor: "#94a3b8",
-          },
-          "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#94a3b8",
-          },
         },
+        /* Поверхности: карточки, панели, элементы списка — явно приводим к paper цвета темы */
+        ".card, .detail-card, .tech-card, .technology-card, .stat-card, .category-card, .resource-item, .controls-card, .tips-card, .data-action, .quick-action": {
+          backgroundColor: '#ffffff',
+          color: '#1f2937',
+          borderColor: '#f1f3f4'
+        },
+        /* Хедеры/панели */
+        ".page-header, .app-header, .header-content": {
+          backgroundColor: '#ffffff',
+          color: '#1f2937'
+        },
+        /* Навигация и AppBar — текст должен быть светлым поверх градиента */
+        ".MuiAppBar-root, .MuiAppBar-root *": {
+          color: '#ffffff'
+        },
+        /* Кнопки с акцентом — гарантируем читаемый белый текст */
+        ".btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-large": {
+          color: '#ffffff'
+        }
       },
     },
   },
@@ -229,6 +242,43 @@ export const darkTheme = createTheme({
           backgroundColor: '#1e293b',
           background: 'linear-gradient(135deg, #475569 0%, #334155 100%)',
         },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          color: '#e6eef8',
+          backgroundColor: '#0f172a',
+          scrollbarColor: "#94a3b8 #0b1220",
+          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+            backgroundColor: "#0f172a",
+            width: 8,
+          },
+          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+            borderRadius: 8,
+            backgroundColor: "#334155",
+            minHeight: 24,
+          },
+        },
+        /* Поверхности в тёмной теме — использовать paper из darkTheme */
+        ".card, .detail-card, .tech-card, .technology-card, .stat-card, .category-card, .resource-item, .controls-card, .tips-card, .data-action, .quick-action": {
+          backgroundColor: '#1e293b',
+          color: '#e6eef8',
+          borderColor: '#334155'
+        },
+        /* Хедеры/панели в тёмной теме */
+        ".page-header, .app-header, .header-content": {
+          backgroundColor: 'transparent',
+          color: '#e6eef8'
+        },
+        /* Навигация и AppBar — текст светлый */
+        ".MuiAppBar-root, .MuiAppBar-root *": {
+          color: '#ffffff'
+        },
+        /* Кнопки с акцентом — оставить белый текст поверх ярких градиентов */
+        ".btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-large": {
+          color: '#ffffff'
+        }
       },
     },
   },

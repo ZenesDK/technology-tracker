@@ -1,5 +1,5 @@
 // AppMUI.jsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ThemeProvider, CssBaseline, Box, Container } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { lightTheme, darkTheme } from './styles/theme';
@@ -15,6 +15,18 @@ import ThemeToggle from './components/ThemeToggle';
 
 function AppMUI() {
   const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+    }
+    // cleanup при размонтаже (на всякий случай)
+    return () => {
+      document.documentElement.classList.remove('dark-theme');
+    };
+  }, [darkMode]);
 
   const theme = useMemo(() => 
     darkMode ? darkTheme : lightTheme,

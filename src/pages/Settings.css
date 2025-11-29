@@ -3,6 +3,8 @@
   padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 .settings-sections {
@@ -12,11 +14,12 @@
 }
 
 .settings-section {
-  background: white;
+  background-color: var(--surface);
+  color: var(--text) !important;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border) !important;
 }
 
 .settings-section h2 {
@@ -88,10 +91,11 @@
 }
 
 .data-action {
-  background: #f8fafc;
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
   padding: 1.5rem;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border) !important;
 }
 
 .data-action h4 {
@@ -113,10 +117,11 @@
 }
 
 .quick-action {
-  background: #f8fafc;
+  background-color: var(--surface);
+  color: var(--text) !important;
   padding: 1.5rem;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border) !important;
   text-align: center;
 }
 
@@ -133,7 +138,7 @@
 
 .btn-danger {
   background: #ef4444;
-  color: white;
+  color: var(--primary-contrast) !important;
 }
 
 .btn-danger:hover {
@@ -242,6 +247,23 @@
   margin-bottom: 0.25rem;
 }
 
+/* === THEME SURFACE OVERRIDES === */
+.settings-page,
+.settings-section,
+.data-action,
+.quick-action,
+.export-details,
+.import-info,
+.modal-content {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.btn-danger {
+  color: var(--primary-contrast) !important;
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
   .settings-page {
@@ -274,3 +296,4 @@
     flex-direction: column;
   }
 }
+
