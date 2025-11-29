@@ -1,24 +1,31 @@
 // pages/AddTechnology.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useTechnologies from '../hooks/useTechnologies';
-import Modal from '../components/Modal';
+import { Link } from 'react-router-dom';
+import TechnologySearch from '../components/TechnologySearch';
+import useTechnologiesApi from '../hooks/useTechnologiesApi';
 import './AddTechnology.css';
 
 function AddTechnology() {
-  const navigate = useNavigate();
-  const { addTechnology, technologies } = useTechnologies();
-  
+  const { 
+    addTechnology, 
+    searchTechnologies, 
+    searchResults, 
+    searchLoading, 
+    importTechnology,
+    fetchTechnologiesFromApi,
+    loading 
+  } = useTechnologiesApi();
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     category: 'frontend',
-    status: 'not-started',
-    notes: ''
+    difficulty: 'beginner',
+    estimatedHours: '',
+    resources: ''
   });
-  
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [errors, setErrors] = useState({});
+
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,82 +33,107 @@ function AddTechnology() {
       ...prev,
       [name]: value
     }));
-    
-    // Очищаем ошибку при изменении поля
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.title.trim()) {
-      newErrors.title = 'Название технологии обязательно';
-    } else if (formData.title.trim().length < 2) {
-      newErrors.title = 'Название должно содержать минимум 2 символа';
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Описание технологии обязательно';
-    } else if (formData.description.trim().length < 10) {
-      newErrors.description = 'Описание должно содержать минимум 10 символов';
-    }
-
-    // Проверка на дубликаты
-    const isDuplicate = technologies.some(
-      tech => tech.title.toLowerCase() === formData.title.toLowerCase().trim()
-    );
-    
-    if (isDuplicate) {
-      newErrors.title = 'Технология с таким названием уже существует';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      addTechnology(formData);
-      setShowSuccessModal(true);
+    if (!formData.title.trim()) {
+      alert('Пожалуйста, введите название технологии');
+      return;
     }
-  };
 
-  const handleSuccessClose = () => {
-    setShowSuccessModal(false);
-    navigate('/technologies');
-  };
+    const techData = {
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      category: formData.category,
+      difficulty: formData.difficulty,
+      estimatedHours: formData.estimatedHours ? parseInt(formData.estimatedHours) : undefined,
+      resources: formData.resources 
+        ? formData.resources.split('\n').filter(url => url.trim())
+        : []
+    };
 
-  const handleAddAnother = () => {
+    addTechnology(techData);
+    
+    // Показываем сообщение об успехе
+    setShowSuccessMessage(true);
+    
+    // Сбрасываем форму
     setFormData({
       title: '',
       description: '',
       category: 'frontend',
-      status: 'not-started',
-      notes: ''
+      difficulty: 'beginner',
+      estimatedHours: '',
+      resources: ''
     });
-    setShowSuccessModal(false);
-    setErrors({});
+
+    // Скрываем сообщение через 3 секунды
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
   };
 
+  const handleLoadFromApi = async () => {
+    await fetchTechnologiesFromApi();
+  };
+
+  const categories = [
+    { value: 'frontend', label: '🌐 Frontend' },
+    { value: 'backend', label: '⚙️ Backend' },
+    { value: 'database', label: '🗄️ Database' },
+    { value: 'devops', label: '🔧 DevOps' },
+    { value: 'mobile', label: '📱 Mobile' },
+    { value: 'ai-ml', label: '🤖 AI/ML' },
+    { value: 'cloud', label: '☁️ Cloud' },
+    { value: 'tools', label: '🛠️ Tools' },
+    { value: 'language', label: '💬 Language' },
+    { value: 'other', label: '📦 Other' }
+  ];
+
+  const difficultyLevels = [
+    { value: 'beginner', label: '👶 Начинающий' },
+    { value: 'intermediate', label: '🚀 Продвинутый' },
+    { value: 'advanced', label: '🔥 Эксперт' }
+  ];
+
   return (
-    <div className="page add-technology-page">
+    <div className="page">
       <div className="page-header">
-        <h1>➕ Добавить технологию</h1>
-        <p>Заполните информацию о новой технологии для изучения</p>
+        <div className="header-content">
+          <h1>Добавить технологию</h1>
+          <p>Создайте новую технологию или импортируйте из базы знаний</p>
+        </div>
+        <Link to="/technologies" className="btn btn-secondary">
+          ← Назад к списку
+        </Link>
       </div>
 
-      <div className="form-container">
-        <form onSubmit={handleSubmit} className="tech-form">
-          <div className="form-section">
-            <h3>Основная информация</h3>
-            
+      {/* Сообщение об успехе */}
+      {showSuccessMessage && (
+        <div className="success-message">
+          <span>✅ Технология успешно добавлена!</span>
+        </div>
+      )}
+
+      {/* Компонент поиска и импорта из API */}
+      <TechnologySearch 
+        onSearch={searchTechnologies}
+        searchResults={searchResults}
+        searchLoading={searchLoading}
+        onImport={importTechnology}
+      />
+
+      <div className="add-tech-content">
+        {/* Форма добавления вручную */}
+        <div className="card manual-form-card">
+          <div className="card-header">
+            <h2>➕ Добавить вручную</h2>
+            <p>Создайте пользовательскую технологию</p>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="tech-form">
             <div className="form-group">
               <label htmlFor="title" className="form-label">
                 Название технологии *
@@ -112,28 +144,25 @@ function AddTechnology() {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className={`form-input ${errors.title ? 'error' : ''}`}
-                placeholder="Например: React Hooks, Node.js Express, MongoDB"
+                placeholder="Например: React, Docker, MongoDB..."
+                className="form-input"
+                required
               />
-              {errors.title && <span className="error-message">{errors.title}</span>}
             </div>
 
             <div className="form-group">
               <label htmlFor="description" className="form-label">
-                Описание *
+                Описание
               </label>
               <textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                rows="4"
-                className={`form-textarea ${errors.description ? 'error' : ''}`}
-                placeholder="Опишите, что представляет собой эта технология, для чего используется..."
+                placeholder="Краткое описание технологии, что она делает и для чего используется..."
+                className="form-textarea"
+                rows="3"
               />
-              {errors.description && (
-                <span className="error-message">{errors.description}</span>
-              )}
             </div>
 
             <div className="form-row">
@@ -148,105 +177,161 @@ function AddTechnology() {
                   onChange={handleInputChange}
                   className="form-select"
                 >
-                  <option value="frontend">🌐 Frontend</option>
-                  <option value="backend">⚙️ Backend</option>
+                  {categories.map(cat => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div className="form-group">
-                <label htmlFor="status" className="form-label">
-                  Начальный статус
+                <label htmlFor="difficulty" className="form-label">
+                  Сложность
                 </label>
                 <select
-                  id="status"
-                  name="status"
-                  value={formData.status}
+                  id="difficulty"
+                  name="difficulty"
+                  value={formData.difficulty}
                   onChange={handleInputChange}
                   className="form-select"
                 >
-                  <option value="not-started">⏳ Не начато</option>
-                  <option value="in-progress">🔄 В процессе</option>
-                  <option value="completed">✅ Изучено</option>
+                  {difficultyLevels.map(level => (
+                    <option key={level.value} value={level.value}>
+                      {level.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
-          </div>
 
-          <div className="form-section">
-            <h3>Дополнительная информация</h3>
-            
             <div className="form-group">
-              <label htmlFor="notes" className="form-label">
-                Первоначальные заметки
+              <label htmlFor="estimatedHours" className="form-label">
+                Ориентировочное время изучения (часы)
+              </label>
+              <input
+                type="number"
+                id="estimatedHours"
+                name="estimatedHours"
+                value={formData.estimatedHours}
+                onChange={handleInputChange}
+                placeholder="Например: 40"
+                min="1"
+                max="1000"
+                className="form-input"
+              />
+              <small className="form-hint">
+                Оставьте пустым, если не знаете точное время
+              </small>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="resources" className="form-label">
+                Ресурсы для изучения
               </label>
               <textarea
-                id="notes"
-                name="notes"
-                value={formData.notes}
+                id="resources"
+                name="resources"
+                value={formData.resources}
                 onChange={handleInputChange}
-                rows="3"
+                placeholder="Введите ссылки на ресурсы (каждая с новой строки):&#10;https://react.dev&#10;https://ru.reactjs.org"
                 className="form-textarea"
-                placeholder="Можете добавить начальные заметки, ссылки на документацию или план изучения..."
+                rows="4"
               />
+              <small className="form-hint">
+                Каждая ссылка должна быть на новой строке
+              </small>
             </div>
-          </div>
 
-          <div className="form-actions">
-            <button 
-              type="button" 
-              onClick={() => navigate('/technologies')}
-              className="btn btn-secondary"
-            >
-              ← Отмена
-            </button>
-            <button 
-              type="submit" 
-              className="btn btn-primary"
-            >
-              ➕ Добавить технологию
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary btn-large">
+                ➕ Добавить технологию
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setFormData({
+                  title: '',
+                  description: '',
+                  category: 'frontend',
+                  difficulty: 'beginner',
+                  estimatedHours: '',
+                  resources: ''
+                })}
+                className="btn btn-secondary"
+              >
+                🗑️ Очистить форму
+              </button>
+            </div>
+          </form>
+        </div>
 
-      {/* Модальное окно успеха */}
-      <Modal
-        isOpen={showSuccessModal}
-        onClose={handleSuccessClose}
-        title="✅ Технология добавлена!"
-        size="md"
-      >
-        <div className="success-modal-content">
-          <p>Технология <strong>"{formData.title}"</strong> успешно добавлена в ваш трекер!</p>
+        {/* Блок загрузки стандартных технологий */}
+        <div className="card api-actions-card">
+          <div className="card-header">
+            <h2>📥 Быстрая загрузка</h2>
+            <p>Добавьте популярные технологии из нашей базы знаний</p>
+          </div>
           
-          <div className="success-details">
-            <div className="success-detail">
-              <strong>Категория:</strong> 
-              {formData.category === 'frontend' ? '🌐 Frontend' : '⚙️ Backend'}
-            </div>
-            <div className="success-detail">
-              <strong>Статус:</strong> 
-              {formData.status === 'not-started' ? '⏳ Не начато' : 
-               formData.status === 'in-progress' ? '🔄 В процессе' : '✅ Изучено'}
-            </div>
-          </div>
-
-          <div className="success-actions">
+          <div className="api-actions">
             <button 
-              onClick={handleSuccessClose}
-              className="btn btn-primary"
+              onClick={handleLoadFromApi}
+              disabled={loading}
+              className="btn btn-primary btn-large load-api-btn"
             >
-              📋 К списку технологий
+              {loading ? (
+                <>
+                  <div className="spinner"></div>
+                  Загрузка...
+                </>
+              ) : (
+                <>
+                  📚 Загрузить стандартные технологии
+                </>
+              )}
             </button>
-            <button 
-              onClick={handleAddAnother}
-              className="btn btn-outline"
-            >
-              ➕ Добавить еще
-            </button>
+            
+            <div className="api-features">
+              <h4>Что будет загружено:</h4>
+              <ul>
+                <li>✅ React - Frontend библиотека</li>
+                <li>✅ Node.js - Серверный JavaScript</li>
+                <li>✅ TypeScript - Типизированный JavaScript</li>
+                <li>✅ MongoDB - NoSQL база данных</li>
+                <li>✅ Docker - Контейнеризация приложений</li>
+              </ul>
+              <p className="feature-note">
+                Все технологии будут добавлены со статусом "Не начато". 
+                Вы можете изменить их статус в списке технологий.
+              </p>
+            </div>
           </div>
         </div>
-      </Modal>
+      </div>
+
+      {/* Подсказки */}
+      <div className="card tips-card">
+        <div className="card-header">
+          <h3>💡 Советы по добавлению технологий</h3>
+        </div>
+        <div className="tips-content">
+          <div className="tip-item">
+            <strong>Используйте поиск</strong>
+            <p>Найдите технологию в нашей базе знаний - многие популярные технологии уже есть с готовыми описаниями и ресурсами.</p>
+          </div>
+          <div className="tip-item">
+            <strong>Указывайте реалистичное время</strong>
+            <p>Ориентировочное время изучения поможет лучше планировать ваш учебный процесс.</p>
+          </div>
+          <div className="tip-item">
+            <strong>Добавляйте ресурсы</strong>
+            <p>Ссылки на официальную документацию, туториалы и курсы помогут в изучении.</p>
+          </div>
+          <div className="tip-item">
+            <strong>Выбирайте правильную категорию</strong>
+            <p>Это поможет в фильтрации и анализе вашего прогресса по направлениям.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
