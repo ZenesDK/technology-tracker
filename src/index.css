@@ -108,11 +108,6 @@
   color: var(--primary-contrast) !important;
 }
 
-/* Полоска статуса (::before) — сохраняем цветную полосу, но фон карточки surface */
-.dark-theme .technology-card::before {
-  /* оставляем полосу как есть, фон карточки уже surface */
-}
-
 /* Статус-бейджи: делаем фон тёмнее и текст светлым для читаемости */
 .dark-theme .status-badge,
 .dark-theme .status-badge * {

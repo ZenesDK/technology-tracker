@@ -553,6 +553,57 @@
   animation: fadeInUp 0.6s ease;
 }
 
+/* Исправление для кнопок btn-secondary в карточках технологий на главной странице */
+:root .content-section .tech-card .btn.btn-secondary {
+  color: #374151 !important;
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+:root .content-section .tech-card .btn.btn-secondary:hover {
+  color: #1f2937 !important;
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+}
+
+/* Для темной темы */
+.dark-theme .content-section .tech-card .btn.btn-secondary {
+  color: #e5e7eb !important;
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.dark-theme .content-section .tech-card .btn.btn-secondary:hover {
+  color: #f9fafb !important;
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+/* Специфично для маленьких кнопок */
+:root .content-section .tech-card .btn.btn-secondary.btn-small {
+  color: #374151 !important;
+  background-color: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+:root .content-section .tech-card .btn.btn-secondary.btn-small:hover {
+  color: #1f2937 !important;
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+}
+
+.dark-theme .content-section .tech-card .btn.btn-secondary.btn-small {
+  color: #e5e7eb !important;
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.dark-theme .content-section .tech-card .btn.btn-secondary.btn-small:hover {
+  color: #f9fafb !important;
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
 .content-section:nth-child(1) { animation-delay: 0.1s; }
 .content-section:nth-child(2) { animation-delay: 0.2s; }
 .content-section:nth-child(3) { animation-delay: 0.3s; }

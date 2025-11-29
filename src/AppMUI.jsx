@@ -1,7 +1,7 @@
 // AppMUI.jsx
 import React, { useState, useMemo, useEffect } from 'react';
 import { ThemeProvider, CssBaseline, Box, Container } from '@mui/material';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { lightTheme, darkTheme } from './styles/theme';
 import { NotificationProvider } from './components/NotificationProvider';
 import Navigation from './components/Navigation';
@@ -84,7 +84,7 @@ function AppMUI() {
                       <p style={{ margin: '0 0 24px 0', color: theme.palette.text.secondary }}>
                         Запрошенная страница не существует.
                       </p>
-                      <a href="/" style={{ 
+                      <a href="#/" style={{ 
                         textDecoration: 'none',
                         padding: '12px 24px',
                         backgroundColor: theme.palette.primary.main,
