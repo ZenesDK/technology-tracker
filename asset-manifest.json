@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/technology-tracker/static/css/main.b30097b6.css",
-    "main.js": "/technology-tracker/static/js/main.14b58be0.js",
+    "main.css": "/technology-tracker/static/css/main.441efa0a.css",
+    "main.js": "/technology-tracker/static/js/main.45c0b44c.js",
     "static/js/453.a5f86b14.chunk.js": "/technology-tracker/static/js/453.a5f86b14.chunk.js",
     "index.html": "/technology-tracker/index.html",
-    "main.b30097b6.css.map": "/technology-tracker/static/css/main.b30097b6.css.map",
-    "main.14b58be0.js.map": "/technology-tracker/static/js/main.14b58be0.js.map",
+    "main.441efa0a.css.map": "/technology-tracker/static/css/main.441efa0a.css.map",
+    "main.45c0b44c.js.map": "/technology-tracker/static/js/main.45c0b44c.js.map",
     "453.a5f86b14.chunk.js.map": "/technology-tracker/static/js/453.a5f86b14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b30097b6.css",
-    "static/js/main.14b58be0.js"
+    "static/css/main.441efa0a.css",
+    "static/js/main.45c0b44c.js"
   ]
 }
