@@ -1,103 +1,232 @@
 // hooks/useTechnologiesApi.js
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import useLocalStorage from './useLocalStorage';
 
-// Mock API сервис для имитации реального API
-const mockApiService = {
-  // Имитация загрузки технологий из API
-  async fetchTechnologies() {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    return [
+// Real API service
+const realApiService = {
+  // Получение случайной цитаты о программировании
+  async fetchProgrammingQuote() {
+    try {
+      const response = await fetch('https://programming-quotes-api.herokuapp.com/quotes/random');
+      if (!response.ok) throw new Error('Failed to fetch quote');
+      const quoteData = await response.json();
+      
+      return {
+        text: quoteData.en,
+        author: quoteData.author
+      };
+    } catch (error) {
+      console.error('Error fetching quote:', error);
+      // Fallback quotes in case API is down
+      const fallbackQuotes = [
+        { text: "The only way to learn a new programming language is by writing programs in it.", author: "Dennis Ritchie" },
+        { text: "Sometimes it's better to leave something alone, to pause, and that's very true of programming.", author: "Joyce Wheeler" },
+        { text: "Programming is not about what you know; it's about what you can figure out.", author: "Chris Pine" }
+      ];
+      return fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+    }
+  },
+
+  // Поиск технологий через публичные API
+  async searchTechnologies(query) {
+    if (!query.trim()) return [];
+
+    try {
+      // Пробуем разные API для поиска
+      const results = await Promise.race([
+        this.searchWithPublicAPI(query),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+      ]);
+
+      return results.length > 0 ? results : this.createFallbackResults(query);
+
+    } catch (error) {
+      console.error('Error searching technologies:', error);
+      return this.createFallbackResults(query);
+    }
+  },
+
+  // Поиск через публичные API (без CORS проблем)
+  async searchWithPublicAPI(query) {
+    try {
+      // Используем API GitHub для поиска репозиториев
+      const response = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}+topic:javascript&sort=stars&order=desc&per_page=10`);
+      
+      if (!response.ok) {
+        throw new Error('GitHub API failed');
+      }
+
+      const data = await response.json();
+      
+      if (!data.items || data.items.length === 0) {
+        return [];
+      }
+
+      // Преобразуем GitHub репозитории в формат технологий
+      return data.items.map((repo, index) => {
+        const category = this.determineCategoryFromRepo(repo);
+        
+        return {
+          id: `github-${repo.id}`,
+          title: this.formatTechName(repo.name, query),
+          description: repo.description || `Open source project related to ${query}`,
+          category: category,
+          status: 'not-started',
+          notes: '',
+          difficulty: this.determineDifficulty(repo.stargazers_count),
+          resources: [
+            repo.html_url,
+            repo.homepage
+          ].filter(Boolean),
+          estimatedHours: this.estimateHoursFromStars(repo.stargazers_count),
+          isFromSearch: true,
+          source: 'github',
+          stars: repo.stargazers_count
+        };
+      });
+
+    } catch (error) {
+      console.error('GitHub search failed:', error);
+      return [];
+    }
+  },
+
+  // Определяем категорию на основе репозитория
+  determineCategoryFromRepo(repo) {
+    const name = repo.name.toLowerCase();
+    const description = (repo.description || '').toLowerCase();
+    const topics = repo.topics || [];
+    const language = (repo.language || '').toLowerCase();
+
+    // Определяем по языку программирования
+    if (['javascript', 'typescript', 'coffeescript'].includes(language)) {
+      if (name.includes('react') || name.includes('vue') || name.includes('angular') || 
+          description.includes('frontend') || description.includes('ui') || 
+          topics.includes('frontend') || topics.includes('react')) {
+        return 'frontend';
+      }
+      return 'backend';
+    }
+
+    if (['python', 'java', 'go', 'rust', 'c++', 'c#'].includes(language)) {
+      return 'backend';
+    }
+
+    if (['html', 'css', 'sass', 'less'].includes(language)) {
+      return 'frontend';
+    }
+
+    // Определяем по ключевым словам
+    const backendKeywords = ['server', 'api', 'framework', 'database', 'backend'];
+    const frontendKeywords = ['ui', 'component', 'frontend', 'browser', 'client'];
+    const devopsKeywords = ['docker', 'kubernetes', 'deploy', 'ci/cd', 'infrastructure'];
+    const databaseKeywords = ['database', 'db', 'mongodb', 'mysql', 'postgres'];
+
+    const allText = `${name} ${description} ${topics.join(' ')}`.toLowerCase();
+
+    if (backendKeywords.some(keyword => allText.includes(keyword))) return 'backend';
+    if (frontendKeywords.some(keyword => allText.includes(keyword))) return 'frontend';
+    if (devopsKeywords.some(keyword => allText.includes(keyword))) return 'devops';
+    if (databaseKeywords.some(keyword => allText.includes(keyword))) return 'database';
+
+    return 'tools';
+  },
+
+  // Форматируем название технологии
+  formatTechName(repoName, query) {
+    // Убираем префиксы и суффиксы
+    let name = repoName
+      .replace(/^awesome-/, '')
+      .replace(/-/g, ' ')
+      .replace(/\bjs\b/g, 'JavaScript')
+      .replace(/\bts\b/g, 'TypeScript');
+
+    // Делаем первую букву заглавной
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+
+    // Если имя слишком общее, используем запрос
+    if (name.length < 3 || ['api', 'lib', 'library', 'utils'].includes(name.toLowerCase())) {
+      return query.charAt(0).toUpperCase() + query.slice(1);
+    }
+
+    return name;
+  },
+
+  // Определяем сложность на основе звезд
+  determineDifficulty(stars) {
+    if (stars > 10000) return 'advanced';
+    if (stars > 1000) return 'intermediate';
+    return 'beginner';
+  },
+
+  // Оцениваем время изучения на основе популярности
+  estimateHoursFromStars(stars) {
+    if (stars > 50000) return 60;   // Очень популярные - сложные
+    if (stars > 10000) return 40;   // Популярные - средние
+    if (stars > 1000) return 25;    // Средние - проще
+    return 15;                      // Малопопулярные - простые
+  },
+
+  // Создаем fallback результаты если API не работают
+  createFallbackResults(query) {
+    const commonTechs = [
       {
-        id: 1001, // Используем большие ID чтобы избежать конфликтов
-        title: 'React',
-        description: 'Библиотека для создания пользовательских интерфейсов',
-        category: 'frontend',
+        id: `fallback-${Date.now()}-1`,
+        title: query.charAt(0).toUpperCase() + query.slice(1),
+        description: `Технология для работы с ${query}`,
+        category: 'tools',
         status: 'not-started',
         notes: '',
         difficulty: 'beginner',
-        resources: ['https://react.dev', 'https://ru.reactjs.org'],
-        estimatedHours: 40
-      },
-      {
-        id: 1002,
-        title: 'Node.js',
-        description: 'Среда выполнения JavaScript на сервере',
-        category: 'backend', 
-        status: 'not-started',
-        notes: '',
-        difficulty: 'intermediate',
-        resources: ['https://nodejs.org', 'https://nodejs.org/ru/docs/'],
-        estimatedHours: 60
-      },
-      {
-        id: 1003,
-        title: 'TypeScript',
-        description: 'Типизированное надмножество JavaScript',
-        category: 'language',
-        status: 'not-started',
-        notes: '',
-        difficulty: 'intermediate',
-        resources: ['https://www.typescriptlang.org'],
-        estimatedHours: 35
-      },
-      {
-        id: 1004,
-        title: 'MongoDB',
-        description: 'Документоориентированная NoSQL база данных',
-        category: 'database',
-        status: 'not-started',
-        notes: '',
-        difficulty: 'intermediate',
-        resources: ['https://www.mongodb.com'],
-        estimatedHours: 45
-      },
-      {
-        id: 1005,
-        title: 'Docker',
-        description: 'Платформа для контейнеризации приложений',
-        category: 'devops',
-        status: 'not-started',
-        notes: '',
-        difficulty: 'advanced',
-        resources: ['https://www.docker.com'],
-        estimatedHours: 30
+        resources: [`https://www.npmjs.com/search?q=${query}`, `https://github.com/topics/${query}`],
+        estimatedHours: 20,
+        isFromSearch: true,
+        source: 'fallback'
       }
     ];
+
+    return commonTechs;
   },
 
-  // Имитация поиска технологий
-  async searchTechnologies(query) {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const allTechs = await this.fetchTechnologies();
-    return allTechs.filter(tech => 
-      tech.title.toLowerCase().includes(query.toLowerCase()) ||
-      tech.description.toLowerCase().includes(query.toLowerCase()) ||
-      tech.category.toLowerCase().includes(query.toLowerCase())
-    );
+  // Получение популярных репозиториев с GitHub по технологии
+  async fetchGitHubRepos(techName) {
+    try {
+      const response = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(techName)}&sort=stars&order=desc&per_page=5`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch GitHub repos');
+      }
+      
+      const data = await response.json();
+      
+      return data.items.map(repo => ({
+        name: repo.name,
+        full_name: repo.full_name,
+        description: repo.description,
+        html_url: repo.html_url,
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        language: repo.language
+      }));
+    } catch (error) {
+      console.error(`Error fetching GitHub repos for ${techName}:`, error);
+      return this.getFallbackRepos(techName);
+    }
   },
 
-  // Имитация загрузки дополнительных ресурсов
-  async fetchAdditionalResources(techId) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    const resourcesMap = {
-      1001: [
-        'https://reactpatterns.com/',
-        'https://github.com/enaqx/awesome-react'
-      ],
-      1002: [
-        'https://nodejs.org/en/docs/guides/',
-        'https://github.com/sindresorhus/awesome-nodejs'
-      ],
-      1003: [
-        'https://www.typescriptlang.org/docs/',
-        'https://github.com/dzharii/awesome-typescript'
-      ]
-    };
-    
-    return resourcesMap[techId] || [];
+  // Fallback репозитории
+  getFallbackRepos(techName) {
+    return [
+      {
+        name: `${techName}-official`,
+        full_name: `official/${techName}`,
+        description: `Official ${techName} repository`,
+        html_url: `https://github.com/search?q=${techName}`,
+        stars: 1000,
+        forks: 100,
+        language: 'JavaScript'
+      }
+    ];
   }
 };
 
@@ -107,33 +236,54 @@ function useTechnologiesApi() {
   const [error, setError] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [dailyQuote, setDailyQuote] = useState(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
 
-  // Загрузка технологий из API
-  const fetchTechnologiesFromApi = useCallback(async () => {
+  // Загрузка ежедневной цитаты
+  const fetchDailyQuote = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setQuoteLoading(true);
+      const quote = await realApiService.fetchProgrammingQuote();
+      setDailyQuote(quote);
       
-      const apiTechnologies = await mockApiService.fetchTechnologies();
+      // Сохраняем цитату в localStorage на сегодня
+      const today = new Date().toDateString();
+      localStorage.setItem('dailyQuote', JSON.stringify({
+        quote,
+        date: today
+      }));
       
-      // Объединяем с существующими технологиями, избегая дубликатов по названию
-      setTechnologies(prev => {
-        const existingTitles = new Set(prev.map(tech => tech.title.toLowerCase()));
-        const newTechnologies = apiTechnologies.filter(tech => 
-          !existingTitles.has(tech.title.toLowerCase())
-        );
-        return [...prev, ...newTechnologies];
-      });
-      
-    } catch (err) {
-      setError('Не удалось загрузить технологии из API');
-      console.error('Ошибка загрузки:', err);
+    } catch (error) {
+      console.error('Error fetching daily quote:', error);
+      // Используем сохраненную цитату если есть
+      const savedQuote = localStorage.getItem('dailyQuote');
+      if (savedQuote) {
+        const { quote, date } = JSON.parse(savedQuote);
+        if (date === new Date().toDateString()) {
+          setDailyQuote(quote);
+        }
+      }
     } finally {
-      setLoading(false);
+      setQuoteLoading(false);
     }
-  }, [setTechnologies]);
+  }, []);
 
-  // Поиск технологий с debounce
+  // Инициализация ежедневной цитаты
+  React.useEffect(() => {
+    const savedQuote = localStorage.getItem('dailyQuote');
+    if (savedQuote) {
+      const { quote, date } = JSON.parse(savedQuote);
+      if (date === new Date().toDateString()) {
+        setDailyQuote(quote);
+      } else {
+        fetchDailyQuote();
+      }
+    } else {
+      fetchDailyQuote();
+    }
+  }, [fetchDailyQuote]);
+
+  // Поиск технологий с использованием реального API
   const searchTechnologies = useCallback(async (query) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -142,8 +292,12 @@ function useTechnologiesApi() {
 
     try {
       setSearchLoading(true);
-      const results = await mockApiService.searchTechnologies(query);
+      setError(null);
+      
+      // Используем реальный API для поиска
+      const results = await realApiService.searchTechnologies(query);
       setSearchResults(results);
+      
     } catch (err) {
       setError('Ошибка поиска технологий');
       console.error('Ошибка поиска:', err);
@@ -155,7 +309,13 @@ function useTechnologiesApi() {
   // Загрузка дополнительных ресурсов
   const fetchAdditionalResources = useCallback(async (techId) => {
     try {
-      const resources = await mockApiService.fetchAdditionalResources(techId);
+      const tech = technologies.find(t => t.id === techId);
+      if (!tech) return [];
+
+      // Получаем GitHub репозитории для технологии
+      const githubRepos = await realApiService.fetchGitHubRepos(tech.title);
+      
+      const additionalResources = githubRepos.map(repo => repo.html_url);
       
       // Обновляем технологию с новыми ресурсами
       setTechnologies(prev => 
@@ -163,19 +323,20 @@ function useTechnologiesApi() {
           tech.id === techId 
             ? { 
                 ...tech, 
-                resources: [...(tech.resources || []), ...resources] 
+                resources: [...(tech.resources || []), ...additionalResources],
+                githubRepos: githubRepos
               }
             : tech
         )
       );
       
-      return resources;
+      return additionalResources;
     } catch (err) {
       setError('Не удалось загрузить дополнительные ресурсы');
       console.error('Ошибка загрузки ресурсов:', err);
       return [];
     }
-  }, [setTechnologies]);
+  }, [technologies, setTechnologies]);
 
   // Импорт технологии из поиска
   const importTechnology = useCallback((tech) => {
@@ -188,7 +349,7 @@ function useTechnologiesApi() {
       
       const importedTech = { 
         ...tech, 
-        id: Date.now(), // Генерируем новый ID для импортированной технологии
+        id: Date.now(), // Генерируем новый ID
         status: 'not-started',
         notes: '',
         importedAt: new Date().toISOString()
@@ -198,6 +359,34 @@ function useTechnologiesApi() {
       return [...prev, importedTech];
     });
   }, [setTechnologies]);
+
+  // Массовое добавление технологий (для импорта)
+  const addMultipleTechnologies = useCallback((newTechnologies) => {
+    setTechnologies(prev => {
+      const existingTitles = new Set(prev.map(tech => tech.title.toLowerCase()));
+      const technologiesToAdd = newTechnologies.filter(tech => 
+        !existingTitles.has(tech.title.toLowerCase())
+      );
+      return [...prev, ...technologiesToAdd];
+    });
+  }, [setTechnologies]);
+
+  // Загрузка стандартных технологий
+  const fetchTechnologiesFromApi = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Просто показываем сообщение, что нет предустановленных технологий
+      alert('Нет предустановленных технологий. Используйте поиск для добавления технологий из GitHub!');
+      
+    } catch (err) {
+      setError('Не удалось загрузить технологии');
+      console.error('Ошибка загрузки:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Существующие функции из useTechnologies
   const updateStatus = useCallback((techId, newStatus) => {
@@ -220,16 +409,36 @@ function useTechnologiesApi() {
     const techWithId = {
       ...newTech,
       id: Date.now(),
-      status: 'not-started',
-      notes: '',
+      status: newTech.status || 'not-started',
+      notes: newTech.notes || '',
       resources: newTech.resources || []
     };
     setTechnologies(prev => [...prev, techWithId]);
     return techWithId;
   }, [setTechnologies]);
 
+  // Функция для удаления одной технологии
   const removeTechnology = useCallback((techId) => {
     setTechnologies(prev => prev.filter(tech => tech.id !== techId));
+  }, [setTechnologies]);
+
+  // Функция для удаления всех технологий
+  const removeAllTechnologies = useCallback(() => {
+    setTechnologies([]);
+  }, [setTechnologies]);
+
+  // Функция для отметки всех технологий как выполненных
+  const markAllCompleted = useCallback(() => {
+    setTechnologies(prev => 
+      prev.map(tech => ({ ...tech, status: 'completed' }))
+    );
+  }, [setTechnologies]);
+
+  // Функция для сброса всех статусов
+  const resetAllStatuses = useCallback(() => {
+    setTechnologies(prev => 
+      prev.map(tech => ({ ...tech, status: 'not-started' }))
+    );
   }, [setTechnologies]);
 
   // Расчет прогресса
@@ -248,18 +457,25 @@ function useTechnologiesApi() {
     error,
     searchResults,
     searchLoading,
+    dailyQuote,
+    quoteLoading,
     
     // API функции
     fetchTechnologiesFromApi,
     searchTechnologies,
     fetchAdditionalResources,
+    fetchDailyQuote,
     importTechnology,
+    addMultipleTechnologies,
     
     // Локальные функции
     updateStatus,
     updateNotes,
     addTechnology,
     removeTechnology,
+    removeAllTechnologies,
+    markAllCompleted,
+    resetAllStatuses,
     
     // Статистика
     progress,

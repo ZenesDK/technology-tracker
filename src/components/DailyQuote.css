@@ -1,0 +1,102 @@
+/* components/DailyQuote.css */
+.daily-quote {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  position: relative;
+}
+
+.daily-quote.loading {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+.quote-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.quote-content {
+  flex: 1;
+}
+
+.quote-text {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-style: italic;
+  quotes: "“" "”" "‘" "’";
+}
+
+.quote-text::before {
+  content: open-quote;
+}
+
+.quote-text::after {
+  content: close-quote;
+}
+
+.quote-author {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-style: normal;
+}
+
+.refresh-quote-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  color: white;
+}
+
+.refresh-quote-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(180deg);
+}
+
+/* Skeleton loading */
+.quote-text-skeleton {
+  height: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.quote-author-skeleton {
+  height: 12px;
+  width: 60%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .daily-quote {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .refresh-quote-btn {
+    align-self: flex-end;
+  }
+}

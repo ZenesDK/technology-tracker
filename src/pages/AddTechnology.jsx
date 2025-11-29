@@ -11,9 +11,7 @@ function AddTechnology() {
     searchTechnologies, 
     searchResults, 
     searchLoading, 
-    importTechnology,
-    fetchTechnologiesFromApi,
-    loading 
+    importTechnology
   } = useTechnologiesApi();
 
   const [formData, setFormData] = useState({
@@ -75,10 +73,6 @@ function AddTechnology() {
     }, 3000);
   };
 
-  const handleLoadFromApi = async () => {
-    await fetchTechnologiesFromApi();
-  };
-
   const categories = [
     { value: 'frontend', label: '🌐 Frontend' },
     { value: 'backend', label: '⚙️ Backend' },
@@ -125,187 +119,143 @@ function AddTechnology() {
         onImport={importTechnology}
       />
 
-      <div className="add-tech-content">
-        {/* Форма добавления вручную */}
-        <div className="card manual-form-card">
-          <div className="card-header">
-            <h2>➕ Добавить вручную</h2>
-            <p>Создайте пользовательскую технологию</p>
+      {/* Форма добавления вручную */}
+      <div className="card manual-form-card">
+        <div className="card-header">
+          <h2>➕ Добавить технологию вручную</h2>
+          <p>Создайте пользовательскую технологию с вашими настройками</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="tech-form">
+          <div className="form-group">
+            <label htmlFor="title" className="form-label">
+              Название технологии *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              placeholder="Например: React, Docker, MongoDB..."
+              className="form-input"
+              required
+            />
           </div>
-          
-          <form onSubmit={handleSubmit} className="tech-form">
+
+          <div className="form-group">
+            <label htmlFor="description" className="form-label">
+              Описание
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Краткое описание технологии, что она делает и для чего используется..."
+              className="form-textarea"
+              rows="3"
+            />
+          </div>
+
+          <div className="form-row">
             <div className="form-group">
-              <label htmlFor="title" className="form-label">
-                Название технологии *
+              <label htmlFor="category" className="form-label">
+                Категория
               </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={formData.title}
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
                 onChange={handleInputChange}
-                placeholder="Например: React, Docker, MongoDB..."
-                className="form-input"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description" className="form-label">
-                Описание
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Краткое описание технологии, что она делает и для чего используется..."
-                className="form-textarea"
-                rows="3"
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="category" className="form-label">
-                  Категория
-                </label>
-                <select
-                  id="category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
-                  className="form-select"
-                >
-                  {categories.map(cat => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="difficulty" className="form-label">
-                  Сложность
-                </label>
-                <select
-                  id="difficulty"
-                  name="difficulty"
-                  value={formData.difficulty}
-                  onChange={handleInputChange}
-                  className="form-select"
-                >
-                  {difficultyLevels.map(level => (
-                    <option key={level.value} value={level.value}>
-                      {level.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="estimatedHours" className="form-label">
-                Ориентировочное время изучения (часы)
-              </label>
-              <input
-                type="number"
-                id="estimatedHours"
-                name="estimatedHours"
-                value={formData.estimatedHours}
-                onChange={handleInputChange}
-                placeholder="Например: 40"
-                min="1"
-                max="1000"
-                className="form-input"
-              />
-              <small className="form-hint">
-                Оставьте пустым, если не знаете точное время
-              </small>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="resources" className="form-label">
-                Ресурсы для изучения
-              </label>
-              <textarea
-                id="resources"
-                name="resources"
-                value={formData.resources}
-                onChange={handleInputChange}
-                placeholder="Введите ссылки на ресурсы (каждая с новой строки):&#10;https://react.dev&#10;https://ru.reactjs.org"
-                className="form-textarea"
-                rows="4"
-              />
-              <small className="form-hint">
-                Каждая ссылка должна быть на новой строке
-              </small>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="btn btn-primary btn-large">
-                ➕ Добавить технологию
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setFormData({
-                  title: '',
-                  description: '',
-                  category: 'frontend',
-                  difficulty: 'beginner',
-                  estimatedHours: '',
-                  resources: ''
-                })}
-                className="btn btn-secondary"
+                className="form-select"
               >
-                🗑️ Очистить форму
-              </button>
+                {categories.map(cat => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
             </div>
-          </form>
-        </div>
 
-        {/* Блок загрузки стандартных технологий */}
-        <div className="card api-actions-card">
-          <div className="card-header">
-            <h2>📥 Быстрая загрузка</h2>
-            <p>Добавьте популярные технологии из нашей базы знаний</p>
-          </div>
-          
-          <div className="api-actions">
-            <button 
-              onClick={handleLoadFromApi}
-              disabled={loading}
-              className="btn btn-primary btn-large load-api-btn"
-            >
-              {loading ? (
-                <>
-                  <div className="spinner"></div>
-                  Загрузка...
-                </>
-              ) : (
-                <>
-                  📚 Загрузить стандартные технологии
-                </>
-              )}
-            </button>
-            
-            <div className="api-features">
-              <h4>Что будет загружено:</h4>
-              <ul>
-                <li>✅ React - Frontend библиотека</li>
-                <li>✅ Node.js - Серверный JavaScript</li>
-                <li>✅ TypeScript - Типизированный JavaScript</li>
-                <li>✅ MongoDB - NoSQL база данных</li>
-                <li>✅ Docker - Контейнеризация приложений</li>
-              </ul>
-              <p className="feature-note">
-                Все технологии будут добавлены со статусом "Не начато". 
-                Вы можете изменить их статус в списке технологий.
-              </p>
+            <div className="form-group">
+              <label htmlFor="difficulty" className="form-label">
+                Сложность
+              </label>
+              <select
+                id="difficulty"
+                name="difficulty"
+                value={formData.difficulty}
+                onChange={handleInputChange}
+                className="form-select"
+              >
+                {difficultyLevels.map(level => (
+                  <option key={level.value} value={level.value}>
+                    {level.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-        </div>
+
+          <div className="form-group">
+            <label htmlFor="estimatedHours" className="form-label">
+              Ориентировочное время изучения (часы)
+            </label>
+            <input
+              type="number"
+              id="estimatedHours"
+              name="estimatedHours"
+              value={formData.estimatedHours}
+              onChange={handleInputChange}
+              placeholder="Например: 40"
+              min="1"
+              max="1000"
+              className="form-input"
+            />
+            <small className="form-hint">
+              Оставьте пустым, если не знаете точное время
+            </small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="resources" className="form-label">
+              Ресурсы для изучения
+            </label>
+            <textarea
+              id="resources"
+              name="resources"
+              value={formData.resources}
+              onChange={handleInputChange}
+              placeholder="Введите ссылки на ресурсы (каждая с новой строки):&#10;https://react.dev&#10;https://ru.reactjs.org"
+              className="form-textarea"
+              rows="4"
+            />
+            <small className="form-hint">
+              Каждая ссылка должна быть на новой строке
+            </small>
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="btn btn-primary btn-large">
+              ➕ Добавить технологию
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setFormData({
+                title: '',
+                description: '',
+                category: 'frontend',
+                difficulty: 'beginner',
+                estimatedHours: '',
+                resources: ''
+              })}
+              className="btn btn-secondary"
+            >
+              🗑️ Очистить форму
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Подсказки */}

@@ -95,16 +95,8 @@
   }
 }
 
-/* Основной контент */
-.add-tech-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-bottom: 32px;
-}
-
-.manual-form-card,
-.api-actions-card {
+/* Карточки */
+.card {
   background: white;
   border-radius: 16px;
   padding: 32px;
@@ -112,10 +104,10 @@
   border: 1px solid #f1f3f4;
   position: relative;
   overflow: hidden;
+  margin-bottom: 24px;
 }
 
-.manual-form-card::before,
-.api-actions-card::before {
+.card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -234,77 +226,7 @@
   min-width: 140px;
 }
 
-/* API Actions */
-.api-actions {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.load-api-btn {
-  width: 100%;
-  margin-bottom: 24px;
-  padding: 18px 24px;
-  font-size: 1.1rem;
-  border-radius: 12px;
-}
-
-.api-features {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.api-features h4 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.api-features ul {
-  margin: 0;
-  padding-left: 0;
-  list-style: none;
-}
-
-.api-features li {
-  padding: 12px 16px;
-  margin-bottom: 8px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
-  font-weight: 500;
-  color: #2c3e50;
-  transition: all 0.3s ease;
-}
-
-.api-features li:hover {
-  background: #e8f4fd;
-  transform: translateX(4px);
-}
-
-.feature-note {
-  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-  color: #856404;
-  padding: 16px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  margin: 0;
-  border: 1px solid #ffeaa7;
-  line-height: 1.5;
-}
-
 /* Советы */
-.tips-card {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f3f4;
-}
-
 .tips-card .card-header {
   text-align: center;
   margin-bottom: 32px;
@@ -363,31 +285,10 @@
   font-size: 0.95rem;
 }
 
-/* Спиннер */
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid transparent;
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* Адаптивность */
 @media (max-width: 1024px) {
-  .add-tech-content {
+  .tips-content {
     grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  
-  .manual-form-card,
-  .api-actions-card {
-    padding: 24px;
   }
 }
 
@@ -406,14 +307,8 @@
     font-size: 2rem;
   }
 
-  .header-content p {
-    font-size: 1.1rem;
-  }
-
-  .manual-form-card,
-  .api-actions-card,
-  .tips-card {
-    padding: 20px;
+  .card {
+    padding: 24px;
   }
 
   .form-row {
@@ -458,11 +353,6 @@
     font-size: 1rem;
   }
 
-  .api-features li {
-    padding: 10px 12px;
-    font-size: 0.9rem;
-  }
-
   .tip-item {
     padding: 20px;
   }
@@ -491,9 +381,7 @@
 }
 
 /* Анимации появления */
-.manual-form-card,
-.api-actions-card,
-.tips-card {
+.card {
   animation: fadeInUp 0.6s ease;
 }
 
